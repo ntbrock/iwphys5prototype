@@ -1,0 +1,64 @@
+2016-May-20 IWP5 Ryan Steed, Taylor Brockman
+
+
+https://github.com/ntbrock/iwphys
+
+
+Mission:
+
+Necessary.  Applets do not work on all computers.
+
+
+Target June 3rd - Friday morning for our Demo's of Milestone 1!
+
+
+Milestone 1 - Content:
+
+0) Register for a new github username + email it to taylor.
+
+1) Checkout project. Make your folder and check in your first file to the new github project:  https://github.com/ntbrock/iwphys5prototype
+
+2) Look through examples of SVG animation and D3
+
+D3 - https://github.com/d3/d3/wiki/Gallery
+
+SVG - http://www.amplesdk.com/examples/markup/svg/tiger/
+
+
+3) Build your first prototypes and check those into github.
+
+4) Schedule a session for demos w/ Taylor + Brandon.
+
+
+
+Milestone 1 - Prototyping and Orientation
+
+June:
+Milestone 2 - Parse the IWP Xml format in javascript.
+
+Milestone 3 - Render a SVG/D3 view of the initial problem setup.
+
+July:
+Milestone 4 - Implement the Equation Calculation (Tricky)
+
+Milestone 5 - Embed into the www Experience on a test.iwphys.org website.
+
+
+August: 
+Milestone 6 - Test!!  > 50% of the problem content, ask Dr. Bennet and others to help us test as well.
+
+
+Availability --
+
+1 more week of school.
+
+June 15 - 17.  
+
+Charleston, SC.
+
+Out last 2 weeks of june.
+
+
+
++ Workservice during school year.
+
