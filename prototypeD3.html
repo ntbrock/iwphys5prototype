@@ -1,0 +1,88 @@
+<DOCTYPE! html>
+<meta charset="utf-8">
+
+<head>
+	<style>
+	body {
+		font-size: 30;
+		font-family: "PT Serif", serif;
+		color: #333;
+		position: relative;
+		width: 960px;
+	}
+	</style>
+</head>
+
+<body>
+<script src="http://d3js.org/d3.v3.js"></script>
+
+	<!-- Some circles. -->
+	<p> Movement with D3 </p>
+	<svg id="move" width="500" height="500">
+		<circle class="circle" cx="60" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="100" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="140" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="140" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="140" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="140" cy="60" r="5" fill="purple"></circle>
+		<circle class="circle" cx="140" cy="60" r="5" fill="purple"></circle>
+		<path d="M 0 0 L 0 500 L 500 500 L 500 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
+	</svg>
+	<!-- Use d3 to  create random x and y positions - alter attributes, could be used for Euler's with parametric function? -->
+	<!-- See "Three Little Circles demo at https://bost.ocks.org/mike/circles/ -->
+	<script>
+		// This function assigns random position variables to each circle over an increment, in both dimensions.
+		(function () {
+		function moveX() {
+			//This d3 command calls all the circles in the SVG tag and applies random integers, translated to position in pixels.
+  			var circle = d3.selectAll("#move circle");
+      		span = d3.selectAll(".circle-x");
+      		data = d3.range(7).map(function() { 
+      			return Math.random() * 420; 
+      			});
+ 		circle.data(data).attr("cx", function(z) { 
+ 			return z; 
+ 			});
+  		span.data(data).text(function(z) { 
+  			return z; 
+  			});
+		}
+		moveX();
+		setInterval(moveX, 2500);
+		})();
+
+		(function () {
+		function moveY() {
+  			var circle = d3.selectAll("#move circle"),
+      		span = d3.selectAll(".circle-y"),
+      		data = d3.range(3).map(function() { 
+      			return Math.random() * 420; 
+      			});
+ 		circle.data(data).attr("cy", function(d) { 
+ 			return d; 
+ 			});
+  		span.data(data).text(function(d) { 
+  			return d; 
+  			});
+		}
+		moveY();
+		setInterval(moveY, 2500);
+		})();
+	</script>
+	<!-- Can also combine data to elements, like path and circle. How to use to create parametric trajectories? -->
+
+	<!-- Another means of moving an object. -->
+	<p> Transition with D3 </p>
+	<button id="button" onclick="transition()">Transition</button>
+	<br></br>
+	<svg  id="trans" width="350" height="350">
+		<circle fill="black" cx="30" cy="30" r="30"></circle>
+	</svg>
+	<script>
+		//D3 transition function, also has easing option which changes type of motion. Can do linear, quadratic, elastic, etc.
+		function transition() {
+			d3.selectAll("#trans circle").transition().ease("cubic").attr("cx", "320");
+			};
+	</script>
+</body>
+</html>
