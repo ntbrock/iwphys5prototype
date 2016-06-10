@@ -12,8 +12,11 @@
   <a href="http://www.utilities-online.info/xmltojson/#.V1rcLuYrLdQ">Xml to Json Converted</a>
 
   <h3>#dropzone</h3>
-  <div id="dropzone"></div>
 
+
+  <h3 id="authorUsername">Loading...</h3>
+
+  <div id="dropzone"></div>
 
   <script type="text/javascript">
 
@@ -21,22 +24,25 @@
 
     console.log("prototypeJune10: ", data );
 
-/*
+  // Single set
+    $("#authorUsername").html( data.problem.author.username );
+
+  // Solids
+
   var items = [];
-  $.each( data, function( key, val ) {
-    items.push( "<li id='" + key + "'>" + val + "</li>" );
+
+  $.each( data.problem.objects.solid, function( index, solid ) {
+    console.log("solid: ", solid );
+
+    items.push( "<p style='background-color: rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ");'> " + solid.name + "</p>" );
   });
  
-  $( "<ul/>", {
-    "class": "my-new-list",
-    html: items.join( "" )
-  }).appendTo( "body" );
-  */
+  $("#dropzone").html( items.join(" ") );
 
-});
+  });
 
-</script>
 
+  </script>
 
 </body>
 <html>
