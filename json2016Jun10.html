@@ -1,0 +1,42 @@
+<html><head><title>JSON navigation sample</title>
+
+    <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
+
+</head>
+
+<body>
+  <h1>JSON Navigation Sample</h1>
+
+  Hello Jquery 3.0
+
+  <a href="http://www.utilities-online.info/xmltojson/#.V1rcLuYrLdQ">Xml to Json Converted</a>
+
+  <h3>#dropzone</h3>
+  <div id="dropzone"></div>
+
+
+  <script type="text/javascript">
+
+  $.getJSON( "prototypeJune10.json", function( data ) {
+
+    console.log("prototypeJune10: ", data );
+
+/*
+  var items = [];
+  $.each( data, function( key, val ) {
+    items.push( "<li id='" + key + "'>" + val + "</li>" );
+  });
+ 
+  $( "<ul/>", {
+    "class": "my-new-list",
+    html: items.join( "" )
+  }).appendTo( "body" );
+  */
+
+});
+
+</script>
+
+
+</body>
+<html>
