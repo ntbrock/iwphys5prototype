@@ -1,0 +1,69 @@
+<DOCTYPE! html>
+<meta charset="utf-8">
+
+<head>
+	<div>Prototype D3</div>
+	<style>
+	body {
+		font-size: 30;
+		font-family: "PT Serif", serif;
+		color: #333;
+		position: relative;
+		width: 960px;
+	}
+	</style>
+</head>
+
+<body>
+
+	<!-- Here's quadratric motion (inverse sqaure laws) -->
+	<svg width="400" height="1000">
+		<rect id="startButton" width="50" height="50" id="startButton" x="" y="" fill="red">
+			<animate begin="mouseover" end="mouseoverout;click" attributeName="fill" from="red" values="red; pink; purple" dur="2s" repeatCount="indefinite" fill="freeze"/>
+		</rect>
+		<text x="10" y="30" font-family="Courier" font-size="10">
+			Fire
+		</text>
+		<!-- "H" and "V" are lines -->
+		<path d="M 0 350 H 320 V 380 H 0 Z" fill="green" stroke="green"/>
+		<!-- the cannon-->
+		<rect width="15" height="10" x="5" y="350" transform="rotate(-45 5 350)"/>
+		<!-- Motion-->
+		<path id="motionPath" d="M 10 350 Q 160 200 310 350" stroke="purple" fill="transparent"/>
+		<!--control point of path-->
+		<circle cx="160" cy="200" r="5" fill="red"/>
+		<!-- example lines -->
+		<path d="M 10 350 L 160 200" stroke="blue" fill="transparent"/>
+		<path d="M 160 200 L 310 350" stroke="blue" fill="transparent"/>
+		<!-- Cannonball -->
+		<circle id="cannonball" r="5" cx="" cy="" fill="transparent" stroke="transparent">
+			<!-- Make the cannonball move along the path. -->
+			<animateMotion begin="startButton.click" dur="2s" repeatCount="1">
+				<mpath xlink:href="#motionPath"/>
+			</animateMotion>
+			<!-- <animate> can also change other attributes. -->
+			<animate begin="startButton.click" attributeName="fill" from="transparent" values="transparent; black" dur=".005s" repeatCount="1" fill="freeze"/>
+		</circle>
+	</svg>
+		
+	<!-- Here's a circular path (magnetism)-->
+	<svg width="400" height="1000">
+		<path d="M 0 350 H 320 V  380 H 0 Z" fill="green" stroke="green"/>
+		<!-- the cannon-->
+		<rect width="15" height="10" x="5" y="350" transform="rotate(-85 5 350)"/>
+		<!-- Motion-->
+		<path id="motionPath2" d="M 10,350 A 150,150 0 0 1 310 350" stroke="purple" fill="transparent"/>
+		<!-- diameter -->
+		<path d="M 10 350 310 350" stroke="blue"/>
+		<!-- center -->
+		<circle cx="160" cy="350" r="5" fill="red"/>
+		<circle id="cannonball" r="5" cx="" cy="" fill="transparent" stroke="transparent">
+			<animateMotion dur="6s" repeatCount="1" begin="startButton.click">
+				<mpath xlink:href="#motionPath2"/>
+			</animateMotion>
+			<animate begin="startButton.click" attributeName="fill" from="transparent" values="transparent; black" repeatCount="1" dur=".005s" fill="freeze"/>
+		</circle>
+	</svg>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<DOCTYPE! html>
+<meta charset="utf-8">
+
+<head>
+	<style>
+	body {
+		font-size: 30;
+		font-family: "PT Serif", serif;
+		color: #333;
+		position: relative;
+		width: 960px;
+	}
+	</style>
+</head>
+
+<body>
+<script src="http://d3js.org/d3.v3.js"></script>
+	<h3>Pair Programming Session 2016-Jun-03 Edit</h3>
+	<!-- Some circles. -->
+	<p> Movement with D3 </p>
+	<svg id="move" width="500" height="500">
+		<circle id="cir1" class="circle" cx="5" cy="5" r="2" fill="purple"></circle>
+		<circle id="cir2" class="circle" cx="5" cy="5" r="4" fill="purple"></circle>
+		<circle id="cir3" class="circle" cx="5" cy="5" r="6" fill="purple"></circle>
+		<circle id="cir4" class="circle" cx="5" cy="5" r="8" fill="purple"></circle>
+		<circle id="cir5" class="circle" cx="5" cy="5" r="10" fill="purple"></circle>
+		<circle id="cir6" class="circle" cx="5" cy="5" r="12" fill="purple"></circle>
+		<circle id="cir7" class="circle" cx="5" cy="5" r="14" fill="purple"></circle>
+		<path d="M 0 0 L 0 500 L 500 500 L 500 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
+	</svg>
+	<!-- Use d3 to  create random x and y positions - alter attributes, could be used for Euler's with parametric function? -->
+	<!-- See "Three Little Circles demo at https://bost.ocks.org/mike/circles/ -->
+	<script>
+
+		var masterTick = 0;
+		// This would come from the IWP XML file, user defined.
+		function y(x, radius) { 
+		
+			var y = (radius * x ) / 10;
+
+			console.log("calculate y = " + y + "  for x = " + x + " and radius = " + radius);
+
+			return y;
+		}
+
+
+
+		// This function assigns random position variables to each circle over an increment, in both dimensions.
+		(function () {
+		function moveX() {
+			//This d3 command calls all the circles in the SVG tag and applies random integers, translated to position in pixels.
+  			var circle = d3.selectAll("#move circle");
+      		span = d3.selectAll(".circle-x");
+      		data = d3.range(7).map(function() { 
+      			return Math.random() * 420; 
+      			});
+ 		circle.data(data).attr("cx", function(z) { 
+ 			return z; 
+ 			});
+  		span.data(data).text(function(z) { 
+  			return z; 
+  			});
+		}
+		//moveX();
+		//setInterval(moveX, 2500);
+		})();
+
+		(function () {
+		function moveY() {
+
+// DEBUGGING Code from Taylor 2
+// https://www.dashingd3js.com/svg-group-element-and-d3js
+
+
+var circleData = [
+  { "cx": 0, "cy": 0, "radius": 2, "color" : "green" },
+  { "cx": 0, "cy": 0, "radius": 4, "color" : "blue" },
+  { "cx": 0, "cy": 0, "radius": 6, "color" : "yellow" },
+  { "cx": 0, "cy": 0, "radius": 8, "color" : "gray" },
+  { "cx": 0, "cy": 0, "radius": 10, "color" : "orange" },
+  { "cx": 0, "cy": 0, "radius": 12, "color" : "red" },
+  { "cx": 0, "cy": 0, "radius": 14, "color" : "purple" }];
+
+  			masterTick += 1;
+  			var circles = d3.selectAll("circle").data( circleData );
+
+  			circles
+  				.attr("fill", function(d) { return d.color } )
+  				.attr("cx", function(d) { return d.cx = masterTick; return d.cx; })
+  				.attr("cy", function(d) { return y(d.cx, d.radius); })
+
+  		}
+
+// DEBUGGING CODE 3
+/*
+  			circles[0].map(function(circle) { 
+
+  				// https://bost.ocks.org/mike/selection/
+  				console.log("Circle: .id: ", circle.id );
+  				console.log("Circle.cx: ", circle.cx,  "  Circle.cy: " , circle.cy);
+
+
+  				/// Doesn't work console.log("d3.select(circle): ", d3.select(circle) );
+
+  				d3.select(circle).attr("cx", function(d) {
+  					console.log("Circle d ", d.id );//.cx);
+  					return 100; 
+  				});
+
+  				d3.select(circle).attr("cy", function(d) {
+  					console.log("Circle d ", d.id );//.cy);
+  					return 100;
+  				});
+
+  			})
+  		}
+  		*/
+
+// DEBUGGING CODE FROM TAYLOR
+//			xLocation = circle.data(data).attr("cx", function(d) {
+//			console.log("moveY: d = ", d );
+//  		return d;
+// 			});
+// 			console.log("moveY: xLocation = " + xLocation );
+
+
+// Code to iterate over all circles
+
+
+/* RYAN'S CODE
+		span = d3.selectAll(".circle-y"),
+		data = d3.range(7).map(function(circle, elem) { 
+			console.log("moveY: Setting X location to 50,  circle: ", circle );
+//			return 50;
+		});
+
+
+
+ 		circles.data(data).attr("cy", function(d) { 
+ 			return d; 
+ 			});
+  		span.data(data).text(function(d) { 
+  			return d; 
+  			});
+		}
+		*/
+
+
+		moveY();
+		setInterval(moveY, 25);
+		})();
+	</script>
+	<!-- Can also combine data to elements, like path and circle. How to use to create parametric trajectories? -->
+
+	<!-- Another means of moving an object. -->
+	<p> Transition with D3 </p>
+	<button id="button" onclick="transition()">Transition</button>
+	<br></br>
+	<svg  id="trans" width="350" height="350">
+		<circle fill="black" cx="30" cy="30" r="30"></circle>
+	</svg>
+	<script>
+		//D3 transition function, also has easing option which changes type of motion. Can do linear, quadratic, elastic, etc.
+		function transition() {
+			d3.selectAll("#trans circle").transition().ease("cubic").attr("cx", "320");
+			};
+	</script>
+</body>
+</html>

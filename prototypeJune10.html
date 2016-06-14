@@ -1,0 +1,191 @@
+<DOCTYPE! html>
+<meta charset="utf-8">
+
+<head>
+	<style>
+	
+		body {
+			font-size :   20                ;
+			font-family : "PT Serif", serif ;
+			color :       #333              ;
+			position :    relative			;
+			width :       960px				;
+		}
+		svg {
+			height : 80%  ;
+			width :  auto ;
+		}
+
+	</style>
+
+</head>
+
+<body>
+	
+	<script src="http://d3js.org/d3.v3.js"></script>
+
+	<h3>Pair Programming Session 2016-Jun-10</h3>
+
+	<p>Cannon Simulation</p>
+
+	<svg id="move" width="1000" height="1000" viewbox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">	
+
+		<!-- Gridlines - this is super messy! Use CSS or D3 to clean up later. -->
+		<path d="M 100 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 200 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 300 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 400 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 500 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 600 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 700 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 800 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 900 0 V 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 100 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 200 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 300 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 400 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 500 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 600 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 700 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 800 H 1000" stroke="lightgray" fill="transparent"/>
+		<path d="M 0 900 H 1000" stroke="lightgray" fill="transparent"/>
+		<!-- The projectile. -->
+		<circle r="8" fill="green"></circle>
+		<!-- The ground. -->
+		<path d="M 0 700 H 1000 V 1000 H 0 Z" fill="lightgreen" stroke="transparent"/>
+		<!-- A target. -->
+		<rect width="20" height="5" x="800" y="695" fill="red" stroke="transparent"/>
+		<!-- An outline of the svg container.-->
+		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
+		
+	</svg>
+
+	<br></br>
+
+	<input id="startStop" type="button" onclick="go()" value="Start"></input>
+
+	<br></br>
+
+	<script>
+
+		var t = 0;
+		//Initial position.
+		var xi = 0;
+		var yi =  700;
+		//Initial velocity components.
+  		var vx = 50;
+  		var vy = -75;
+  		//Initial acceleration components.
+  		var ax = 0;
+  		var ay = 10;
+
+		// A clock.
+  		function time() {
+  			t += .01; 
+  		};
+  		
+
+		//These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
+		function x(t) {
+
+			var x = 0.5*ax*Math.pow(t, 2) + vx*t + xi;
+			return x;
+
+		};
+		function y(t) { 
+		
+ 			var y = 0.5*ay*Math.pow(t, 2) + vy*t + yi;
+			return y;
+
+		};
+		
+		//Euler's method to refresh position over time.
+		function move() {
+
+  			d3.selectAll("circle")
+  				.attr("cx", function(d) { return x(t); } )	  				
+  				.attr("cy", function(d) { return y(t); } ); 
+  			
+  			//Debugging Code
+  			/*(function () {
+  				console.log ("y position = " + d3.selectAll("circle").attr("cy"));
+  				console.log ("x position = " + d3.selectAll("circle").attr("cx"));
+  				console.log ("time = " + t)
+  			}) () ;*/
+
+  		};	
+  		
+  		//Set interval to renew position.
+		var trigger = null;			
+		var clock = null;
+		//Restarts motion.
+		function go() {
+			trigger = setInterval("move()", 1);
+			clock = setInterval("time()", 10 );
+			document.getElementsByTagName("input")[0].setAttribute("onclick", "stop()");
+			document.getElementsByTagName("input")[0].setAttribute("value", "Stop");
+			console.log("gone");	
+		}
+		
+		//Stops motion.					
+		function stop() {
+			//Stop move and time functions.
+		 	clearInterval(trigger);
+		 	clearInterval(clock);
+			console.log ("stopped");
+			document.getElementsByTagName("input")[0].setAttribute("onclick", "go()");
+			document.getElementsByTagName("input")[0].setAttribute("value", "Resume");
+		};
+  		
+  		//Debugging Code
+  		/*function check() {
+  			console.log ("time = " + t);
+  			console.log ("x position = " + d3.selectAll("circle").attr("cx"));
+  			console.log ("y position = " + d3.selectAll("circle").attr("cy"));
+  		}
+  		setInterval(function () { check(); }, 1000);*/
+
+  		//Where will the projectile land?
+  		function impact() {
+
+  			var impactPosition = -2*vx*vy/ay-10;
+  			console.log ("impact position = " + impactPosition);
+  			return impactPosition;
+
+  		};
+
+  		//Moves target.
+  		function rectangle() {
+
+  			d3.selectAll("rect")
+  				.attr("x", function(e) { return impact(); })
+  				.attr("y", yi-5);
+  			console.log("rect x = " + d3.selectAll("rect").attr("x"));
+  			console.log("rect y = " + d3.selectAll("rect").attr("y"));
+  		};
+  		rectangle();
+  		
+  		//Something to parse the xml...
+  		/*var xhttp = new XMLHttpRequest();
+  		xhttp.onreadystatechange = function () { 
+  			if (xhttp.readyState == 4 && xhttp.status == 200) {
+  			someFunction (xhttp);
+  			}
+  		};
+  		xhttp.open("GET", "prototypeJune10.xml", true);
+  		xhttp.send();
+
+  		function someFunction(xml) {
+  			var xmlDoc = xml.responseXML;
+  			console.log("testing = " + document.getElementsByTagName("xmin")[0].childNodes[0].nodeValue)
+  		}*/
+
+	</script>
+
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,38 @@
+Interactive Web Physics 5
+2016-Apr-08 Intro session
+
+
+
+	    Taylor Brockman·Apr-7 4:01 PM
+https://www.iwphys.org/pps/webInterface.php/Users/winters@ncssm.edu/0403-template.iwpsrc
+
+https://www.iwphys.org/pps/webInterface.php/Users/winters@ncssm.edu/0403-template.iwp
+
+SVG Tiger
+
+SVG Animation
+https://css-tricks.com/guide-svg-animations-smil/
+
+
+Github
+
+http://70ans.inra.fr/en/
+
+
+https://github.com/mbostock/d3/wiki/Gallery
+
+http://mbostock.github.io/d3/talk/20111116/bundle.html
+
+https://www.iwphys.org/pps/webInterface.php/Users/winters@ncssm.edu/ray-refraction-3d.iwpsrc
+
+
+Trickiest part of pproejct is going from a string, parsing it, turning it into an equation, subsiutating in vars, then over time, recalculating.
+
+<calculator type="parametric">
+					<value>-10*tan(toRadians(i))</value>
+								</calculator>
+
+
+T D D
+
+Try --- by hand create a simple IWPhis anitmation, using both D3 and SVG animation , see which one you like better.
