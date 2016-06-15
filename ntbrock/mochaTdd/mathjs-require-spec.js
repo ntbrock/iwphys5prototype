@@ -5,7 +5,6 @@
 var expect = require('chai').expect;
 
 
-
 describe('MathjsRequire', function() {
     it('should exist', function() {
         var MathjsRequire = require('mathjs');

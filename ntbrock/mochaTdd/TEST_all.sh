@@ -1,3 +1,4 @@
 #!/bin/sh
 
-mocha --reporter=nyan mathjs-require-spec.js d3.min-include-spec.js
+mocha --reporter=nyan mathjs-require-spec.js d3.min-include-spec.js parseSingle-iwpJson-spec.js
+
