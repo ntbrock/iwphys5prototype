@@ -1,11 +1,14 @@
 // 2016-Jun-15
 
+// Built using Mocha + Chai
 'use strict';
-var expect = require('mathjs').expect;
+var expect = require('chai').expect;
+
+
 
 describe('MathjsRequire', function() {
     it('should exist', function() {
-        var MathjsRequire = require('./math.js');
+        var MathjsRequire = require('mathjs');
         expect(MathjsRequire).to.not.be.undefined;
     });
 });
