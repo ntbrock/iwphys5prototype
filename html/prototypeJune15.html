@@ -9,8 +9,6 @@
 
 <body>
 
-	<p>Cannon Simulation</p>
-
 	<svg id="move" width="1000" height="1000" viewbox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">	
 
 		<!-- Gridlines - this is super messy! Use CSS or D3 to clean up later. -->
@@ -42,13 +40,18 @@
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
 		
 	</svg>
-
-	<div class="table">
+	<div id="playBar">
+				<span> Time:  </span>
+				<span id="digClock">0.00</span>
+				<span id="bottomRow" colspan="2"><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
+				<span id="addMe"><input id="reset" type="button" onclick="reset()" value="Reset"></input></span>
+	</div>
+	<div id="leftTray">
 		<table id="variableTable">
-			<tr class="even">
-				<td> Time </td>
-				<td id="digClock">0.00</td>
-			</tr>
+			<tr>
+				<th>
+					Cannon Simulation
+				</th>
 			<tr class="odd">
 				<td> Cannon Height </td>
 				<td><input id="input" type="text" value="700"/></td>
@@ -63,10 +66,6 @@
 			</tr>
 			<tr>
 				<td colspan="2"><input type="button" id="valueReset" onclick="resetValues()" value="Restore Original Parameters"/></td>
-			</tr>
-			<tr>
-				<td id="bottomRow" colspan="2"><input id="startStop" type="button" onclick="start()" value="Start"></input></td>
-				<td id="addMe"><input id="reset" type="button" onclick="reset()" value="Reset"></input></td>
 			</tr>
 		</table>
 	</div>
