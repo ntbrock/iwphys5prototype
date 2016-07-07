@@ -87,17 +87,30 @@
 		addEventListener("input", function() {rectangle();});
 		addEventListener("input", function() {reset();});
 
+
+
+		function resetValues() {
+			yi = originalY;
+			v = originalV;
+			ay = originalAy;
+			text1.value = originalY;
+			text2.value = originalV;
+			text3.value = originalAy;
+			reset();
+		}
 		//Moves target.
-		function rectangle() {
+		/*function rectangle() {
 
 			d3.selectAll("#target")
 				.attr("x", function(e) { return impact(); })
 				.attr("y", 700-5);
 			//More debugging...
 			console.log("rect x = " + d3.selectAll("rect").attr("x"));
+			console.log("impactPosition = " + impactPosition);
 			//console.log("rect y = " + d3.selectAll("rect").attr("y"));
+			
 		};
-		rectangle();
+		rectangle();*/
 	</script>
 
 </body>

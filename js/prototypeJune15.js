@@ -112,12 +112,12 @@ function hideReset() {
 setInterval(function () { check(); }, 1000);*/
 
 //Where will the projectile land?
-function impact() {
+/*function impact() {
 
 	var impactPosition = (v*Math.cos(theta)/ay)*(v*Math.sin(theta)+Math.sqrt(Math.pow(v,2)*Math.pow(Math.sin(theta),2)+2*ay*(yi-700)))-10;
 	return impactPosition;
 
-};
+};*/
 
 //Update display.
 function clockDisplay () {
@@ -127,11 +127,7 @@ function clockDisplay () {
 
 };
 
-function resetValues() {
-	text1.value = originalY
-	text2.value = originalV
-	text3.value = originalAy
-}
+
 
 
 
