@@ -58,7 +58,5 @@ div.leftTray {
 	width: 100%;
 	left: 400px;
 	background-color: #ddd;
-}
-#playBar.span {
-	padding-right: 25px;
+	padding-left: 1%;
 }

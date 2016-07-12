@@ -95,12 +95,12 @@ function reset() {
 }
 function showReset() {
 	document.getElementById("reset").style.visibility = "visible";
-	document.getElementById("bottomRow").setAttribute("colspan", "1");
+	document.getElementById("startStop").setAttribute("colspan", "1");
 	document.getElementById("addMe").style.visibility = "visible";
 }
 function hideReset() {
 	document.getElementById("reset").style.visibility = "collapse";
-	document.getElementById("bottomRow").setAttribute("colspan","2");
+	document.getElementById("startStop").setAttribute("colspan","2");
 	document.getElementById("addMe").style.visibility = "collapse";
 }
 //Debugging Code
@@ -127,7 +127,27 @@ function clockDisplay () {
 
 };
 
+//Incremental playbar.
+var playBarIncrement = .05;
 
+function backTick() {
+	stop();
+	trigger = setInterval("move()", 1);
+	digClock = setInterval("clockDisplay()", 100);
+	document.getElementById("startStop").setAttribute("onclick", "go()");
+	document.getElementById("startStop").setAttribute("value", "Resume");
+	t -= playBarIncrement;
+	//console.log("worked");
+};
+function forwardTick() {
+	stop();
+	trigger = setInterval("move()", 1);
+	digClock = setInterval("clockDisplay()", 100);
+	document.getElementById("startStop").setAttribute("onclick", "go()");
+	document.getElementById("startStop").setAttribute("value", "Resume");
+	t += playBarIncrement;
+	//console.log("worked");
+};
 
 
 

@@ -34,22 +34,26 @@
 		<circle r="8" fill="green"></circle>
 		<!-- The ground. -->
 		<path d="M 0 700 H 1000 V 1000 H 0 Z" fill="lightgreen" stroke="transparent"/>
-		<!-- A target. -->
+		<!-- A target.
 		<rect id="target" width="20" height="5" x="0" y="695" fill="red" stroke="transparent"/>
+		-->
 		<!-- An outline of the svg container.-->
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
 		
 	</svg>
 	<div id="playBar">
-				<span> Time:  </span>
+				<span>Time:  </span>
 				<span id="digClock">0.00</span>
-				<span id="bottomRow" colspan="2"><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
 				<span id="addMe"><input id="reset" type="button" onclick="reset()" value="Reset"></input></span>
+				<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
+				<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
+				<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
+				<span><input id="input4" type="text" value="0.05" size="4em"/></span>
 	</div>
 	<div id="leftTray">
 		<table id="variableTable">
 			<tr>
-				<th>
+				<th colspan="2">
 					Cannon Simulation
 				</th>
 			<tr class="odd">
@@ -84,9 +88,10 @@
 		var text3 = document.getElementById("input3");
 		text3.addEventListener("input", function() {ay = +text3.value;});
 
-		addEventListener("input", function() {rectangle();});
-		addEventListener("input", function() {reset();});
+		var text4 = document.getElementById("input4");
+		text4.addEventListener("input", function() {playBarIncrement = +text4.value;});
 
+		addEventListener("input", function() {reset();});
 
 
 		function resetValues() {
@@ -98,6 +103,7 @@
 			text3.value = originalAy;
 			reset();
 		}
+		
 		//Moves target.
 		/*function rectangle() {
 
@@ -111,6 +117,7 @@
 			
 		};
 		rectangle();*/
+
 	</script>
 
 </body>
