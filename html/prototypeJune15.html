@@ -3,8 +3,8 @@
 
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/prototypeJune15.css"/>
-	<script type="text/javascript" src="../js/prototypeJune15.js"></script>
 	<script charset="utf-8" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/prototypeJune15.js"></script>
 </head>
 
 <body>
@@ -30,6 +30,8 @@
 		<path d="M 0 700 H 1000" stroke="lightgray" fill="transparent"/>
 		<path d="M 0 800 H 1000" stroke="lightgray" fill="transparent"/>
 		<path d="M 0 900 H 1000" stroke="lightgray" fill="transparent"/>
+		<!-- Object trail. -->
+		<polyline onload="applyTrail()" id="objectTrail" fill="none" stroke="blue" stroke-width="2" points=""/>
 		<!-- The projectile. -->
 		<circle r="8" fill="green"></circle>
 		<!-- The ground. -->
@@ -104,6 +106,7 @@
 			reset();
 		}
 		
+
 		//Moves target.
 		/*function rectangle() {
 

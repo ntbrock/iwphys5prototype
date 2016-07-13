@@ -148,6 +148,30 @@ function forwardTick() {
 	t += playBarIncrement;
 	//console.log("worked");
 };
+ 
+ //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
+function applyTrail() {
+	
+	//Sample set of coordinates to create line.
+	var lineData = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
+	                 { "x": 40,  "y": 10}, { "x": 60,  "y": 40},
+	                 { "x": 80,  "y": 5},  { "x": 100, "y": 60}];
+	//Acesses data in array and extracts coordinates.
+	var lineFunction = d3.svg.line()
+								.x(function(d) { return d.x; })
+								.y(function(d) { return d.y; })
+								.interpolate("linear");
+
+	var svgContainer = document.getElementById("move");
+	//Line path.
+	var lineGraph = svgContainer.append("path")
+								.attr("d", lineFunction(lineData))
+								.attr("stroke", "blue")
+								.attr("stroke-width", 2)
+								.attr("fill", "none");
+
+
+};
 
 
 
