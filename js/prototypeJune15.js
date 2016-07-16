@@ -148,6 +148,32 @@ function forwardTick() {
 	t += playBarIncrement;
 	//console.log("worked");
 };
+forwardTickButton = document.getElementById("forwardTick");
+backTickButton = document.getElementById("backTick");
+
+function arrowTick() {
+	document.addEventListener('keydown', (event) => {
+		const keyName = event.key;
+		if (keyName === 'ArrowRight') {
+		    // not alert when only Control key is pressed.
+		    forwardTick();
+		}
+		else if (keyName === 'ArrowLeft') {
+			backTick();
+		}
+		else {
+			return;
+		}
+	}, false);
+	window.addEventListener("keydown", function(e) {
+	// space and arrow keys
+		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+	  		e.preventDefault();
+		}
+	}, false);
+}
+arrowTick();
+
  
  //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
 function applyTrail() {
@@ -162,17 +188,34 @@ function applyTrail() {
 								.y(function(d) { return d.y; })
 								.interpolate("linear");
 
-	var svgContainer = document.getElementById("move");
 	//Line path.
-	var lineGraph = svgContainer.append("path")
+	var lineGraph = document.getElementById("move").append("path")
 								.attr("d", lineFunction(lineData))
 								.attr("stroke", "blue")
 								.attr("stroke-width", 2)
 								.attr("fill", "none");
-
+	console.log("worked");
 
 };
+function joke() {
+	alert("Knock Knock");
+	alert("Boo!");
+	alert("How come you're crying, user?");
+}
 
+function easterEgg() {
+	document.addEventListener('keydown', (event) => {
+		const keyName = event.key;
+		if (keyName === 'x') {
+		    // not alert when only Control key is pressed.
+		    joke();
+		}
+		else {
+			return;
+		}
+	}, false);
 
+}
+easterEgg();
 
 

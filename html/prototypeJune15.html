@@ -31,7 +31,7 @@
 		<path d="M 0 800 H 1000" stroke="lightgray" fill="transparent"/>
 		<path d="M 0 900 H 1000" stroke="lightgray" fill="transparent"/>
 		<!-- Object trail. -->
-		<polyline onload="applyTrail()" id="objectTrail" fill="none" stroke="blue" stroke-width="2" points=""/>
+		<polyline  id="objectTrail" fill="none" stroke="blue" stroke-width="2" points=""/>
 		<!-- The projectile. -->
 		<circle r="8" fill="green"></circle>
 		<!-- The ground. -->
@@ -43,16 +43,29 @@
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
 		
 	</svg>
-	<div id="playBar">
-				<span>Time:  </span>
-				<span id="digClock">0.00</span>
-				<span id="addMe"><input id="reset" type="button" onclick="reset()" value="Reset"></input></span>
-				<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
-				<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
-				<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
-				<span><input id="input4" type="text" value="0.05" size="4em"/></span>
-	</div>
-	<div id="leftTray">
+		<div>
+			<table id="playBar">
+				<tr>	
+					<td>
+						<span>Time: </span>
+						<span id="digClock">0.00</span>
+					</td>
+					<td id="addMe">
+						<input id="reset" type="button" onclick="reset()" value="Reset"></input>
+					</td>
+					<td>
+						<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
+						<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
+						<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
+					</td>
+					<td>
+						<span>Time Step: </span>
+						<span><input id="input4" type="text" value="0.05" size="4em"/></span>
+					</td>
+				</tr>
+			</table>
+		<div>
+	<div class="tableFormat">
 		<table id="variableTable">
 			<tr>
 				<th colspan="2">
@@ -74,8 +87,6 @@
 				<td colspan="2"><input type="button" id="valueReset" onclick="resetValues()" value="Restore Original Parameters"/></td>
 			</tr>
 		</table>
-	</div>
-
 	
 
 	<script>
