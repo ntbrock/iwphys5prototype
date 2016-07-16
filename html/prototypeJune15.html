@@ -42,44 +42,42 @@
 		<!-- An outline of the svg container.-->
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>
 		
-	</svg>
-		<div>
-			<table id="playBar">
-				<tr>	
-					<td>
-						<span>Time: </span>
-						<span id="digClock">0.00</span>
-					</td>
-					<td id="addMe">
-						<input id="reset" type="button" onclick="reset()" value="Reset"></input>
-					</td>
-					<td>
-						<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
-						<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
-						<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
-					</td>
-					<td>
-						<span>Time Step: </span>
-						<span><input id="input4" type="text" value="0.05" size="4em"/></span>
-					</td>
-				</tr>
-			</table>
-		<div>
+	</svg>	
+		<table id="playBar">
+			<tr>	
+				<td class="bottomBorder">
+					<span>Time: </span>
+					<span id="digClock">0.00</span>
+				</td>
+				<td id="addMe">
+					<input id="reset" type="button" onclick="reset()" value="Reset"></input>
+				</td>
+				<td>
+					<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
+					<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
+					<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
+				</td>
+				<td class="bottomBorder">
+					<span>Time Step: </span>
+					<span><input id="input4" type="text" value="0.05" size="4em"/></span>
+				</td>
+			</tr>
+		</table>
 	<div class="tableFormat">
 		<table id="variableTable">
 			<tr>
 				<th colspan="2">
 					Cannon Simulation
 				</th>
-			<tr class="odd">
+			<tr class="bottomBorder">
 				<td> Cannon Height </td>
 				<td><input id="input" type="text" value="700"/></td>
 			</tr>
-			<tr class="even">
+			<tr class="bottomBorder">
 				<td> Initial Velocity </td>
 				<td><input id="input2" type="text" value="80"/></td>
 			</tr>
-			<tr class="odd">
+			<tr class="bottomBorder">
 				<td> Gravitational Acceleration </td>
 				<td><input id="input3" type="text" value="10"/></td>
 			</tr>
@@ -87,7 +85,7 @@
 				<td colspan="2"><input type="button" id="valueReset" onclick="resetValues()" value="Restore Original Parameters"/></td>
 			</tr>
 		</table>
-	
+
 
 	<script>
 
