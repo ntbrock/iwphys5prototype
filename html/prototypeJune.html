@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/prototypeJune.css"/>
 	<script charset="utf-8" src="../js/d3.min.js"></script>
 	<script charset="utf-8" src="../js/jquery-3.0.0.js"></script>
+	<script charset="utf-8" src="../js/math.js"></script>
 	<script type="text/javascript" src="../js/prototypeJune.js"></script>
 </head>
 
@@ -70,6 +71,15 @@
 				<th colspan="2">
 					Cannon Simulation
 				</th>
+			</tr>
+			<tr class="bottomBorder">
+				<td> Ball X Eqn </td>
+				<td><input id="ballX" type="text" value="0.5*v*t*cos(theta)"/></td>
+			</tr>
+			<tr class="bottomBorder">
+				<td> Ball Y Eqn </td>
+				<td><input id="ballY" type="text" value="0.5*ay*pow(t, 2) + v*t*sin(theta) + yi"/></td>
+			</tr>
 			<tr class="bottomBorder">
 				<td> Cannon Height </td>
 				<td><input id="input" type="text" value="700"/></td>

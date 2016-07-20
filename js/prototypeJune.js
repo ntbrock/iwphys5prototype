@@ -11,6 +11,44 @@ $(function(){
 	console.log("Initialized Viewbox: ", viewBox );
 });
 
+
+var equations = {};
+function parseEquationsFromUserInput() { 
+
+	try { 
+		equations.ballX = math.compile( $("#ballX").val() );
+		$("#ballX").removeClass("input-error");
+		$("#ballX").addClass("input-ok");
+	} catch (err) { 
+		console.log("Unable to compile X equation: ", err);
+
+		$("#ballX").removeClass("input-ok");
+		$("#ballX").addClass("input-error");
+	}
+
+
+	try { 		
+		equations.ballY = math.compile( $("#ballY").val() );
+		$("#ballY").addClass("input-ok");
+		$("#ballY").removeClass("input-error");
+	} catch (err) { 
+		console.log("Unable to compile Y equation: ", err);
+		$("#ballY").addClass("input-error");
+		$("#ballY").removeClass("input-ok");
+	}
+}
+
+// Bind to user change.
+$("#ballX").change(function() { parseEquationsFromUserInput(); reset(); });
+$("#ballY").change(function() { parseEquationsFromUserInput(); reset(); });
+
+
+$(function(){
+	console.log("parseEquations: ", equations);
+	parseEquationsFromUserInput();
+
+
+});
 	
 
 /**
@@ -88,19 +126,45 @@ function time() {
 	t += .01; 
 };
 
-
+function varsCurrent() {
+	// TODO - pull this out of the in memory buffer of varsByStep.
+	return { theta: theta, xi: xi, yi: yi, v: v, ax: ax, ay: ay, t: t };
+};
 //These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
 function x(t) {
 
-	var x = v*t*Math.cos(theta);
-	return x;
+	// 2016-Jul-20 - Use the dynamically parsed values 
+
+
+
+	var eqn =  equations.ballX;
+	var vars = varsCurrent();
+	try { 
+		var result =  eqn.eval(vars);
+		return result;
+	} catch ( err ) { 
+		console.log("x:135> Unable to evaluate equation: ", eqn, err);
+		return 0;
+	}
+
+	
+
+	// var x = v*t*Math.cos(theta);
+	// return x;
 
 };
 
 function y(t) { 
-
-	var y = 0.5*ay*Math.pow(t, 2) + v*t*Math.sin(theta) + yi;
-	return y;
+	var eqn = equations.ballY;
+	var vars = varsCurrent();
+	try {
+		var result = eqn.eval(vars);
+		return result;
+	}
+	catch ( err ) { 
+		console.log("y:157> Unable to evaluate equation: ", eqn, err);
+		return 0;
+	}
 
 };
 
@@ -322,7 +386,16 @@ function onloadFunction() {
 	addEventListener("input", function() {reset();});
 
 	applyTrail();
+
+	$("#ballX").change(function() { parseEquationsFromUserInput(); reset(); });
+	$("#ballY").change(function() { parseEquationsFromUserInput(); reset(); });
+
+
 };
+
+
+
+
 
 
 
