@@ -180,42 +180,61 @@ function applyTrail() {
 	
 	//Sample set of coordinates to create line.
 	var lineData = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
-	                 { "x": 40,  "y": 10}, { "x": 60,  "y": 40},
-	                 { "x": 80,  "y": 5},  { "x": 100, "y": 60}];
+	                 { "x": 40,  "y": 10}, { "x": 60,  "y": 25},
+	                 { "x": 80,  "y": 15},  { "x": 100, "y": 30}];
+
+	//INSERT ITERATIVE FUNCTION OR EULER'S METHOD HERE
+	for (i=0; i<6; i++) {
+		var someX = x(i);
+		console.log(someX);
+	}
+	//ALSO NEED FUNCTION TO INSERT DATA INTO DATA SET
+
 	//Acesses data in array and extracts coordinates.
 	var lineFunction = d3.svg.line()
 								.x(function(d) { return d.x; })
 								.y(function(d) { return d.y; })
 								.interpolate("linear");
-
+	var svgContainer = d3.select("svg")
 	//Line path.
-	var lineGraph = document.getElementById("move").append("path")
+	var lineGraph = svgContainer.append("path")
 								.attr("d", lineFunction(lineData))
 								.attr("stroke", "blue")
 								.attr("stroke-width", 2)
 								.attr("fill", "none");
-	console.log("worked");
 
 };
-function joke() {
-	alert("Knock Knock");
-	alert("Boo!");
-	alert("How come you're crying, user?");
-}
 
-function easterEgg() {
-	document.addEventListener('keydown', (event) => {
-		const keyName = event.key;
-		if (keyName === 'x') {
-		    // not alert when only Control key is pressed.
-		    joke();
-		}
-		else {
-			return;
-		}
-	}, false);
+// Some elements of code must wait for HTML load to call elements - included below, and tied to html onload event.
+function onloadFunction() {
 
-}
-easterEgg();
+	var text1 = document.getElementById("input");
+	text1.addEventListener("input", function() {yi = +text1.value;});
+
+	var text2 = document.getElementById("input2");
+	text2.addEventListener("input", function() {v = +text2.value;});
+
+	var text3 = document.getElementById("input3");
+	text3.addEventListener("input", function() {ay = +text3.value;});
+
+	var text4 = document.getElementById("input4");
+	text4.addEventListener("input", function() {playBarIncrement = +text4.value;});
+
+	addEventListener("input", function() {reset();});
+
+	function resetValues() {
+		yi = originalY;
+		v = originalV;
+		ay = originalAy;
+		text1.value = originalY;
+		text2.value = originalV;
+		text3.value = originalAy;
+		reset();
+	}
+
+	applyTrail();
+};
+
+
 
 

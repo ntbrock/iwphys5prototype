@@ -1,0 +1,5 @@
+Meeting Points - Goals to Discuss:
+
+* Trouble with object trails - tie into Euler prototypes?
+* Next objective - equation translation and next prototype
+* Design clarifications
