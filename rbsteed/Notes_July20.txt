@@ -1,5 +1,15 @@
+Accomplished:
+* Fixed reset bug
+* Added time step playbar - sliding?
+* Cleaned up repository
+
 Meeting Points - Goals to Discuss:
 
 * Trouble with object trails - tie into Euler prototypes?
 * Next objective - equation translation and next prototype
 * Design clarifications
+
+
+
+
+Implementing in-memory historical table - object trails, graphing, unit test comparing versions

@@ -4,10 +4,11 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/prototypeJune.css"/>
 	<script charset="utf-8" src="../js/d3.min.js"></script>
+	<script charset="utf-8" src="../js/jquery-3.0.0.js"></script>
 	<script type="text/javascript" src="../js/prototypeJune.js"></script>
 </head>
 
-<body onload="onloadFunction()">
+<body>
 
 	<svg id="move" width="1000" height="1000" viewbox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">	
 		<!-- Gridlines - this is super messy! Use CSS or D3 to clean up later. -->
@@ -86,6 +87,19 @@
 			</tr>
 		</table>
 	</div>
+
+
+<script type="text/javascript">
+
+$(function() {
+
+	console.log("Document is ready!");
+
+	onloadFunction();
+});
+
+</script>
+
 
 </body>
 

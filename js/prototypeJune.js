@@ -1,7 +1,74 @@
+
+/**
+ * 2016-Jul-20 Graphic Layer Initailization to do our own reflection to turn svg cooridnate system into cartesian coordinates.
+ */
+
+var viewBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
+$(function(){ 
+
+	var viewBoxAttrs = $("#move")[0].getAttribute("viewBox").split(" ");
+	viewBox= { minX: parseFloat(viewBoxAttrs[0]), minY: parseFloat(viewBoxAttrs[1]), maxX: parseFloat(viewBoxAttrs[2]), maxY: parseFloat(viewBoxAttrs[3]) };
+	console.log("Initialized Viewbox: ", viewBox );
+});
+
+	
+
+/**
+ * 2016-Jul-20 Concept for creating a assoicate hash of varitable -> value
+ */
+
+var varsOriginal = { 
+y: 700,
+x: 25,
+v: 80,
+Ay: -10,
+Ax: 0
+}
+
+// Initialize the memory space for the large array that holds all histroical values
+var varsAtStep = [];
+
+// Initialize time - the big bang!
+var stepNow = 0;
+// T will always exist in every problem at every step, but must be set based on problem.
+var t = 0;
+// Tdelta is how much time changes with each anitmation step.
+var tDelta = 0.05; 
+
+//Step 0 really is the original!
+varsOriginal.t = t;
+varsAtStep[0] = varsOriginal;
+
+
+// Run the simulation forward in time, step by step.
+for ( var step = 1; step <= 5; step++ ) { 
+
+var varsPrevious = varsAtStep[step-1];
+var varsNow = {};
+$.extend(varsNow, varsPrevious);
+
+//console.log("step: ", step, " varsPrevious: ", varsPrevious);
+// Do the calcs here
+// 1. Advance time
+varsNow.t = varsPrevious.t + tDelta;
+
+varsNow.x = varsPrevious.x + 100;
+varsNow.y = varsPrevious.y - 100;
+
+
+varsAtStep[step] = varsNow;
+}
+
+//console.log("varsOriginal: ", varsOriginal);
+//console.log("varsNow: " , varsNow);
+//console.log("varsAtStep: " , varsAtStep);
+//- END 2016-Jul-20 Brockman -----------------------------------------------------------
+
+
 var originalY = 700;
 var originalX = 0;
 var originalV = 80;
-var originalAy = 10;
+var originalAy = -10;
 var originalAx = 0;
 
 var t = 0;
@@ -32,18 +99,23 @@ function x(t) {
 
 function y(t) { 
 
-	var y = 0.5*ay*Math.pow(t, 2) - v*t*Math.sin(theta) + yi;
+	var y = 0.5*ay*Math.pow(t, 2) + v*t*Math.sin(theta) + yi;
 	return y;
 
 };
 
 //Euler's method to refresh position over time.
-
+function yView(y) {
+	return viewBox.maxY -1*y;
+};
+function xView(x) {
+	return x;
+};
 function move() {
 
 	d3.selectAll("circle")
-		.attr("cx", function(d) { return x(t); } )	  				
-		.attr("cy", function(d) { return y(t); } ); 
+		.attr("cx", function(d) { return xView(x(t)); } )	  				
+		.attr("cy", function(d) { return yView(y(t)); } ); 
 	
 	//Debugging Code
 	/*(function () {
@@ -86,8 +158,8 @@ function stop() {
 function reset() {
 	stop();
 	d3.selectAll("circle")
-		.attr("cx", function(d) { return xi; })	  				
-		.attr("cy", function(d) { return yi; }); 
+		.attr("cx", function(d) { return xView(xi); })	  				
+		.attr("cy", function(d) { return yView(yi); }); 
 	t = 0;
 	document.getElementById("startStop").setAttribute("value", "Start");
 	document.getElementById("startStop").setAttribute("onclick", "start()");
@@ -175,13 +247,22 @@ function arrowTick() {
 arrowTick();
 
  
- //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
+//Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
+//https://www.dashingd3js.com/svg-paths-and-d3js2		
 function applyTrail() {
 	
 	//Sample set of coordinates to create line.
 	var lineData = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
 	                 { "x": 40,  "y": 10}, { "x": 60,  "y": 25},
 	                 { "x": 80,  "y": 15},  { "x": 100, "y": 30}];
+
+	                 
+
+
+	// THIS wil totally break
+	// 2016-Jul-20
+	lineData = varsAtStep;
+console.log("linedata:241> ", lineData);
 
 	//INSERT ITERATIVE FUNCTION OR EULER'S METHOD HERE
 	for (i=0; i<6; i++) {
@@ -204,7 +285,25 @@ function applyTrail() {
 								.attr("fill", "none");
 
 };
+function resetValues() {
+	yi = originalY;
+	v = originalV;
+	ay = originalAy;
 
+
+	console.log("setting #input to: ", originalY );
+
+	$("#input").val(originalY);
+	$("#input2").val(originalV);
+	$("#input3").val(originalAy);
+	
+	/*
+	text1.value = originalY;
+	text2.value = originalV;
+	text3.value = originalAy;
+	*/
+	reset();
+}
 // Some elements of code must wait for HTML load to call elements - included below, and tied to html onload event.
 function onloadFunction() {
 
@@ -221,16 +320,6 @@ function onloadFunction() {
 	text4.addEventListener("input", function() {playBarIncrement = +text4.value;});
 
 	addEventListener("input", function() {reset();});
-
-	function resetValues() {
-		yi = originalY;
-		v = originalV;
-		ay = originalAy;
-		text1.value = originalY;
-		text2.value = originalV;
-		text3.value = originalAy;
-		reset();
-	}
 
 	applyTrail();
 };
