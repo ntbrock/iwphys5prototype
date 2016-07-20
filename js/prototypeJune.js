@@ -286,7 +286,7 @@ function forwardTick() {
 };
 forwardTickButton = document.getElementById("forwardTick");
 backTickButton = document.getElementById("backTick");
-
+/* Keyboard control
 function arrowTick() {
 	document.addEventListener('keydown', (event) => {
 		const keyName = event.key;
@@ -309,6 +309,7 @@ function arrowTick() {
 	}, false);
 }
 arrowTick();
+*/
 
  
 //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
