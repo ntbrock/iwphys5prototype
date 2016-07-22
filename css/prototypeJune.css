@@ -21,7 +21,7 @@ th, td {
 	vertical-align: center          ;
 }
 #variableTable {
-	padding: 10%;
+	padding: 5%;
 	background-color: #ddd;
 }
 .bottomBorder {
@@ -63,14 +63,14 @@ th, td {
 	top: 0;
 	height: 90%;
 	width: 100%;
-	left: 200px;
+	left: 300px;
 }
 #playBar {
 	position: absolute;
 	top: 91%;
 	height: auto;
 	width: 546px;
-	left: 402px;
+	left: 452px;
 	background-color: #ddd;
 	padding-left: 1%;
 }
