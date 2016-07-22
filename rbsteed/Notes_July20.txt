@@ -13,3 +13,33 @@ Meeting Points - Goals to Discuss:
 
 
 Implementing in-memory historical table - object trails, graphing, unit test comparing versions
+
+
+Next Feature List:
+
+* Ryan> Migrate inputs to jquery .change callbacks.
+
+* Ryan> Table css / format fix 
+
+* Ryan> Each calulation should write out to the historical table varsAtStep array.
+
+* Ryan> Object trail rendering from varsAtStep Array
+
+//* Ryan> Fix keyboard controls to only apply when inputs are non-focused.//
+
+* Ryan> Clear console logs.
+
+//* Ryan> Ball needs disappear before first rendering//
+
+* Ryan> Add cannon and moving platform
+
+* Ryan> Clean up code - add comments and clarity.
+
+* Taylor> Iterate over all of the problems, and produce big tables that are every calcualtion at every timestep for every variable.
+
+* Pair next time> Test the javascript varsAtStep against the iwp4 big tables that Taylor created.
+
+* Pair next> Dynamically add solids onto the svg canvas based on the iwp Json.
+
+* Pair next> Doing the inputs, then outputs, then the window size, then the time step controls. (All these things are configurable from the .iwp file).
+

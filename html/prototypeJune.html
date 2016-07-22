@@ -34,12 +34,9 @@
 		<!-- Object trail. -->
 		<polyline  id="objectTrail" fill="none" stroke="blue" stroke-width="2" points=""/>
 		<!-- The projectile. -->
-		<circle r="8" fill="green"></circle>
+		<circle visibility="hidden" r="8" fill="green"></circle>
 		<!-- The ground. -->
 		<path d="M 0 700 H 1000 V 1000 H 0 Z" fill="lightgreen" stroke="transparent"/>
-		<!-- A target.
-		<rect id="target" width="20" height="5" x="0" y="695" fill="red" stroke="transparent"/>
-		-->
 		<!-- An outline of the svg container.-->
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>	
 	</svg>	
@@ -82,15 +79,15 @@
 			</tr>
 			<tr class="bottomBorder">
 				<td> Cannon Height </td>
-				<td><input id="input" type="text" value="700"/></td>
+				<td><input id="input" type="text" value=""/></td>
 			</tr>
 			<tr class="bottomBorder">
 				<td> Initial Velocity </td>
-				<td><input id="input2" type="text" value="80"/></td>
+				<td><input id="input2" type="text" value=""/></td>
 			</tr>
 			<tr class="bottomBorder">
 				<td> Gravitational Acceleration </td>
-				<td><input id="input3" type="text" value="10"/></td>
+				<td><input id="input3" type="text" value=""/></td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="button" id="valueReset" onclick="resetValues()" value="Restore Original Parameters"/></td>

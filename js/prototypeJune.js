@@ -1,4 +1,5 @@
-
+//Set initial ball coordinates (to hide from view).
+var projectile = d3.selectAll("circle");
 /**
  * 2016-Jul-20 Graphic Layer Initailization to do our own reflection to turn svg cooridnate system into cartesian coordinates.
  */
@@ -56,7 +57,7 @@ $(function(){
  */
 
 var varsOriginal = { 
-y: 700,
+y: 300,
 x: 25,
 v: 80,
 Ay: -10,
@@ -103,7 +104,7 @@ varsAtStep[step] = varsNow;
 //- END 2016-Jul-20 Brockman -----------------------------------------------------------
 
 
-var originalY = 700;
+var originalY = 300;
 var originalX = 0;
 var originalV = 80;
 var originalAy = -10;
@@ -123,12 +124,12 @@ var ay = originalAy;
 
 // A clock.
 function time() {
-	t += .01; 
+t += .01; 
 };
 
 function varsCurrent() {
 	// TODO - pull this out of the in memory buffer of varsByStep.
-	return { theta: theta, xi: xi, yi: yi, v: v, ax: ax, ay: ay, t: t };
+	return { theta: theta, xi: varsOriginal.x, yi: varsOriginal.y, v: v, ax: ax, ay: ay, t: t };
 };
 //These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
 function x(t) {
@@ -178,6 +179,7 @@ function xView(x) {
 function move() {
 
 	d3.selectAll("circle")
+		.attr("visibility", "visible")
 		.attr("cx", function(d) { return xView(x(t)); } )	  				
 		.attr("cy", function(d) { return yView(y(t)); } ); 
 	
@@ -222,6 +224,7 @@ function stop() {
 function reset() {
 	stop();
 	d3.selectAll("circle")
+		.attr("visibility", "hidden")
 		.attr("cx", function(d) { return xView(xi); })	  				
 		.attr("cy", function(d) { return yView(yi); }); 
 	t = 0;
@@ -286,15 +289,15 @@ function forwardTick() {
 };
 forwardTickButton = document.getElementById("forwardTick");
 backTickButton = document.getElementById("backTick");
-/* Keyboard control
-function arrowTick() {
+
+function arrowTickOn() {
 	document.addEventListener('keydown', (event) => {
 		const keyName = event.key;
-		if (keyName === 'ArrowRight') {
+		if (keyName === 'ArrowRight' && $("#input").is(":not(:focus)") && $("#input2").is(":not(:focus)") && $("#input3").is(":not(:focus)") && $("#input4").is(":not(:focus)") && $("#ballX").is(":not(:focus)") && $("#ballY").is(":not(:focus)")) {
 		    // not alert when only Control key is pressed.
 		    forwardTick();
 		}
-		else if (keyName === 'ArrowLeft') {
+		else if (keyName === 'ArrowLeft' && $("#input").is(":not(:focus)") && $("#input2").is(":not(:focus)") && $("#input3").is(":not(:focus)") && $("#input4").is(":not(:focus)") && $("#ballX").is(":not(:focus)") && $("#ballY").is(":not(:focus)")) {
 			backTick();
 		}
 		else {
@@ -303,15 +306,13 @@ function arrowTick() {
 	}, false);
 	window.addEventListener("keydown", function(e) {
 	// space and arrow keys
-		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-	  		e.preventDefault();
-		}
+	if([37, 39].indexOf(e.keyCode) > -1 && $("#input").is(":not(:focus)")) {
+	 	e.preventDefault();
+	}
 	}, false);
 }
-arrowTick();
-*/
+arrowTickOn();
 
- 
 //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
 //https://www.dashingd3js.com/svg-paths-and-d3js2		
 function applyTrail() {
@@ -350,6 +351,11 @@ console.log("linedata:241> ", lineData);
 								.attr("fill", "none");
 
 };
+
+//Create platform and cannon, move ground.
+function graphicMovement () {
+}
+
 function resetValues() {
 	yi = originalY;
 	v = originalV;
@@ -369,28 +375,34 @@ function resetValues() {
 	*/
 	reset();
 }
+
 // Some elements of code must wait for HTML load to call elements - included below, and tied to html onload event.
 function onloadFunction() {
 
-	var text1 = document.getElementById("input");
-	text1.addEventListener("input", function() {yi = +text1.value;});
+	$("#input").change(function () { 	
+							yi = +$("#input").val();
+							reset();
+						});
+ 
+	$("#input2").change(function () { 
+							v = +$("#input2").val(); 
+							reset();
+						});
 
-	var text2 = document.getElementById("input2");
-	text2.addEventListener("input", function() {v = +text2.value;});
+	$("#input3").change(function () { 
+							ay = +$("#input3").val(); 
+							reset();
+						});
 
-	var text3 = document.getElementById("input3");
-	text3.addEventListener("input", function() {ay = +text3.value;});
-
-	var text4 = document.getElementById("input4");
-	text4.addEventListener("input", function() {playBarIncrement = +text4.value;});
-
-	addEventListener("input", function() {reset();});
+	$("#input4").change(function () { 
+							playBarIncrement = +$("#input4").val;
+							reset();
+						});
 
 	applyTrail();
 
 	$("#ballX").change(function() { parseEquationsFromUserInput(); reset(); });
 	$("#ballY").change(function() { parseEquationsFromUserInput(); reset(); });
-
 
 };
 
