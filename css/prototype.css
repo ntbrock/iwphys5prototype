@@ -6,8 +6,9 @@ body {
 	width:       960px			   ;
 }
 svg {
-	height: 70%  ;
+	height: auto ;
 	width:  auto ;
+	padding-left: 20%;
 }
 table {
 	height:  auto              ;

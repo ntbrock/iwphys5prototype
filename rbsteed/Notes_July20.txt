@@ -29,7 +29,7 @@ Next Feature List:
 
 * Ryan> Clear console logs.
 
-//* Ryan> Ball needs disappear before first rendering//
+//* Ryan> Ball needs disappear before first rendering. //
 
 * Ryan> Add cannon and moving platform
 

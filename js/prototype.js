@@ -53,7 +53,7 @@ $(function(){
 	
 
 /**
- * 2016-Jul-20 Concept for creating a assoicate hash of varitable -> value
+ * 2016-Jul-20 Concept for creating a associate hash of variable -> value
  */
 
 var varsOriginal = { 
@@ -103,7 +103,6 @@ varsAtStep[step] = varsNow;
 //console.log("varsAtStep: " , varsAtStep);
 //- END 2016-Jul-20 Brockman -----------------------------------------------------------
 
-
 var originalY = 300;
 var originalX = 0;
 var originalV = 80;
@@ -129,15 +128,12 @@ t += .01;
 
 function varsCurrent() {
 	// TODO - pull this out of the in memory buffer of varsByStep.
-	return { theta: theta, xi: varsOriginal.x, yi: varsOriginal.y, v: v, ax: ax, ay: ay, t: t };
+	return { theta: theta, xi: xi, yi: yi, v: v, ax: ax, ay: ay, t: t };
 };
 //These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
 function x(t) {
 
 	// 2016-Jul-20 - Use the dynamically parsed values 
-
-
-
 	var eqn =  equations.ballX;
 	var vars = varsCurrent();
 	try { 
@@ -147,9 +143,6 @@ function x(t) {
 		console.log("x:135> Unable to evaluate equation: ", eqn, err);
 		return 0;
 	}
-
-	
-
 	// var x = v*t*Math.cos(theta);
 	// return x;
 
@@ -166,7 +159,6 @@ function y(t) {
 		console.log("y:157> Unable to evaluate equation: ", eqn, err);
 		return 0;
 	}
-
 };
 
 //Euler's method to refresh position over time.
@@ -177,19 +169,16 @@ function xView(x) {
 	return x;
 };
 function move() {
-
 	d3.selectAll("circle")
 		.attr("visibility", "visible")
 		.attr("cx", function(d) { return xView(x(t)); } )	  				
 		.attr("cy", function(d) { return yView(y(t)); } ); 
-	
 	//Debugging Code
 	/*(function () {
 		console.log ("y position = " + d3.selectAll("circle").attr("cy"));
 		console.log ("x position = " + d3.selectAll("circle").attr("cx"));
 		console.log ("time = " + t)
 	}) () ;*/
-
 };	
 
 //Set interval to renew position.
@@ -306,7 +295,7 @@ function arrowTickOn() {
 	}, false);
 	window.addEventListener("keydown", function(e) {
 	// space and arrow keys
-	if([37, 39].indexOf(e.keyCode) > -1 && $("#input").is(":not(:focus)")) {
+	if([37, 39].indexOf(e.keyCode) > -1 && $("#input").is(":not(:focus)") && $("#input2").is(":not(:focus)") && $("#input3").is(":not(:focus)") && $("#input4").is(":not(:focus)") && $("#ballX").is(":not(:focus)") && $("#ballY").is(":not(:focus)")) {
 	 	e.preventDefault();
 	}
 	}, false);
@@ -315,6 +304,7 @@ arrowTickOn();
 
 //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
 //https://www.dashingd3js.com/svg-paths-and-d3js2		
+var svgContainer = d3.select("svg")
 function applyTrail() {
 	
 	//Sample set of coordinates to create line.
@@ -352,9 +342,42 @@ console.log("linedata:241> ", lineData);
 
 };
 
-//Create platform and cannon, move ground.
-function graphicMovement () {
-}
+//Moves ground.
+function groundAndPlatform() { 
+	if (yi <= 300) {
+		var lineData = [ { "x": 0,     "y": yView(yi)},  
+		          		 { "x": 1000,  "y": yView(yi)},
+		                 { "x": 1000,  "y": 1000}, 
+		                 { "x": 0,   "y": 1000} ];
+		var lineFunction = d3.svg.line()
+		                         .x(function(d) { return d.x; })
+		                         .y(function(d) { return d.y; })
+		                         .interpolate("linear");
+		$("#ground").attr("d", lineFunction(lineData));
+		$("#platform").attr("d", "M0 0");
+	}
+	else if (yi > 300) {
+		var lineData = [ { "x": 0,     "y": yView(yi)},  
+		          		 { "x": 20,  "y": yView(yi)},
+		                 { "x": 20,  "y": 720}, 
+		                 { "x": 0,   "y": 720} ];
+		var lineFunction = d3.svg.line()
+		                         .x(function(d) { return d.x; })
+		                         .y(function(d) { return d.y; })
+		                         .interpolate("linear");
+		$("#platform").attr("d", lineFunction(lineData))
+					  .attr("fill", "brown");
+	} 
+	else {
+		return;
+	}
+};
+$("*").change(function () { 
+	groundAndPlatform();
+});
+
+//Creates and maintains platform.
+
 
 function resetValues() {
 	yi = originalY;
@@ -383,7 +406,7 @@ function onloadFunction() {
 							yi = +$("#input").val();
 							reset();
 						});
- 
+
 	$("#input2").change(function () { 
 							v = +$("#input2").val(); 
 							reset();

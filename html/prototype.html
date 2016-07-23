@@ -2,16 +2,16 @@
 <meta charset="utf-8">
 
 <head>
-	<link rel="stylesheet" type="text/css" href="../css/prototypeJune.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/prototype.css"/>
 	<script charset="utf-8" src="../js/d3.min.js"></script>
 	<script charset="utf-8" src="../js/jquery-3.0.0.js"></script>
 	<script charset="utf-8" src="../js/math.js"></script>
-	<script type="text/javascript" src="../js/prototypeJune.js"></script>
+	<script type="text/javascript" src="../js/prototype.js"></script>
 </head>
 
 <body>
 
-	<svg id="move" width="1000" height="1000" viewbox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">	
+	<svg id="move" width="1000" height="1000" viewbox="0 0 1000 1000" preserveAspectRatio="xMinYMin meet">	
 		<!-- Gridlines - this is super messy! Use CSS or D3 to clean up later. -->
 		<path d="M 100 0 V 1000" stroke="lightgray" fill="transparent"/>
 		<path d="M 200 0 V 1000" stroke="lightgray" fill="transparent"/>
@@ -36,7 +36,9 @@
 		<!-- The projectile. -->
 		<circle visibility="hidden" r="8" fill="green"></circle>
 		<!-- The ground. -->
-		<path d="M 0 700 H 1000 V 1000 H 0 Z" fill="lightgreen" stroke="transparent"/>
+		<path id="ground" d="M 0 700 H 1000 V 1000 H 0 Z" fill="lightgreen" stroke="transparent"/>
+		<!-- A platform. -->	
+		<path id="platform" d="M 0 300 H 0 V 0 H 0 Z" fill="brown" stroke="brown"/>
 		<!-- An outline of the svg container.-->
 		<path d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 Z" stroke="darkblue" fill="transparent" stroke-width="5px"/>	
 	</svg>	
