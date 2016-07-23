@@ -9,7 +9,8 @@ $(function(){
 
 	var viewBoxAttrs = $("#move")[0].getAttribute("viewBox").split(" ");
 	viewBox= { minX: parseFloat(viewBoxAttrs[0]), minY: parseFloat(viewBoxAttrs[1]), maxX: parseFloat(viewBoxAttrs[2]), maxY: parseFloat(viewBoxAttrs[3]) };
-	console.log("Initialized Viewbox: ", viewBox );
+	//Debugging 20-Jul-2016
+	//console.log("Initialized Viewbox: ", viewBox );
 });
 
 
@@ -45,7 +46,8 @@ $("#ballY").change(function() { parseEquationsFromUserInput(); reset(); });
 
 
 $(function(){
-	console.log("parseEquations: ", equations);
+	//Debugging 20-Jul-2016:
+	//console.log("parseEquations: ", equations);
 	parseEquationsFromUserInput();
 
 
@@ -108,6 +110,8 @@ var originalX = 0;
 var originalV = 80;
 var originalAy = -10;
 var originalAx = 0;
+var originalTheta = Math.PI/4;
+var originalTimeStep = 0.05;
 
 var t = 0;
 //Cannon angle.
@@ -318,14 +322,6 @@ function applyTrail() {
 	// THIS wil totally break
 	// 2016-Jul-20
 	lineData = varsAtStep;
-console.log("linedata:241> ", lineData);
-
-	//INSERT ITERATIVE FUNCTION OR EULER'S METHOD HERE
-	for (i=0; i<6; i++) {
-		var someX = x(i);
-		console.log(someX);
-	}
-	//ALSO NEED FUNCTION TO INSERT DATA INTO DATA SET
 
 	//Acesses data in array and extracts coordinates.
 	var lineFunction = d3.svg.line()
@@ -384,12 +380,10 @@ function resetValues() {
 	v = originalV;
 	ay = originalAy;
 
-
-	console.log("setting #input to: ", originalY );
-
 	$("#input").val(originalY);
 	$("#input2").val(originalV);
-	$("#input3").val(originalAy);
+	$("#input3").val(-originalAy);
+	$("#input5").val(originalTheta*180/Math.PI)
 	
 	/*
 	text1.value = originalY;
@@ -419,6 +413,13 @@ function onloadFunction() {
 
 	$("#input4").change(function () { 
 							playBarIncrement = +$("#input4").val;
+							reset();
+						});
+	$("#input5").change(function () { 
+							$("#input5").each(function () {
+								theta = parseFloat($(this).val());
+							});
+							theta = theta*Math.PI/180;
 							reset();
 						});
 
