@@ -11,12 +11,12 @@ $(function(){
 	viewBox= { minX: parseFloat(viewBoxAttrs[0]), minY: parseFloat(viewBoxAttrs[1]), maxX: parseFloat(viewBoxAttrs[2]), maxY: parseFloat(viewBoxAttrs[3]) };
 	//Debugging 20-Jul-2016
 	//console.log("Initialized Viewbox: ", viewBox );
+
 });
 
 
 var equations = {};
 function parseEquationsFromUserInput() { 
-
 	try { 
 		equations.ballX = math.compile( $("#ballX").val() );
 		$("#ballX").removeClass("input-error");
@@ -60,10 +60,12 @@ $(function(){
 
 var varsOriginal = { 
 y: 300,
-x: 25,
-v: 80,
+x: 0,
+Vx: 57,
+Vy: 57,
 Ay: -10,
-Ax: 0
+Ax: 0,
+theta: Math.PI/4
 }
 
 // Initialize the memory space for the large array that holds all histroical values
@@ -73,8 +75,8 @@ var varsAtStep = [];
 var stepNow = 0;
 // T will always exist in every problem at every step, but must be set based on problem.
 var t = 0;
-// Tdelta is how much time changes with each anitmation step.
-var tDelta = 0.05; 
+// Tdelta is how much time changes with each animation step.
+var tDelta = 1; 
 
 //Step 0 really is the original!
 varsOriginal.t = t;
@@ -82,27 +84,29 @@ varsAtStep[0] = varsOriginal;
 
 
 // Run the simulation forward in time, step by step.
-for ( var step = 1; step <= 5; step++ ) { 
+for ( var step = 1; step <= 100; step++ ) { 
 
 var varsPrevious = varsAtStep[step-1];
 var varsNow = {};
 $.extend(varsNow, varsPrevious);
 
 //console.log("step: ", step, " varsPrevious: ", varsPrevious);
-// Do the calcs here
+
 // 1. Advance time
 varsNow.t = varsPrevious.t + tDelta;
-
-varsNow.x = varsPrevious.x + 100;
-varsNow.y = varsPrevious.y - 100;
-
+// Do the calcs here
+varsNow.x = (varsPrevious.Vx+varsPrevious.Ax*varsPrevious.t)*tDelta+varsPrevious.x;	
+varsNow.y = (varsPrevious.Vy+varsPrevious.Ay*varsPrevious.t)*tDelta+varsPrevious.y;
 
 varsAtStep[step] = varsNow;
+console.log("graph: "+varsNow.x+", "+varsNow.y);
 }
 
-//console.log("varsOriginal: ", varsOriginal);
-//console.log("varsNow: " , varsNow);
-//console.log("varsAtStep: " , varsAtStep);
+console.log("varsOriginal: ", varsOriginal);
+console.log("varsNow: " , varsNow);
+console.log("varsAtStep: " , varsAtStep);
+console.log("graph: "+varsNow.x+", "+varsNow.y);
+
 //- END 2016-Jul-20 Brockman -----------------------------------------------------------
 
 var originalY = 300;
@@ -312,9 +316,7 @@ var svgContainer = d3.select("svg")
 function applyTrail() {
 	
 	//Sample set of coordinates to create line.
-	var lineData = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
-	                 { "x": 40,  "y": 10}, { "x": 60,  "y": 25},
-	                 { "x": 80,  "y": 15},  { "x": 100, "y": 30}];
+	var lineData = [];
 
 	                 
 
@@ -325,10 +327,10 @@ function applyTrail() {
 
 	//Acesses data in array and extracts coordinates.
 	var lineFunction = d3.svg.line()
-								.x(function(d) { return d.x; })
-								.y(function(d) { return d.y; })
+								.x(function(d) { return xView(d.x); })
+								.y(function(d) { return yView(d.y); })
 								.interpolate("linear");
-	var svgContainer = d3.select("svg")
+	var svgContainer = d3.select("svg");
 	//Line path.
 	var lineGraph = svgContainer.append("path")
 								.attr("d", lineFunction(lineData))

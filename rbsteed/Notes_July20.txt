@@ -17,7 +17,7 @@ Implementing in-memory historical table - object trails, graphing, unit test com
 
 Next Feature List:
 
-* Ryan> //Migrate inputs to jquery .change callbacks.//
+//* Ryan> Migrate inputs to jquery .change callbacks. //
 
 * Ryan> Table css / format fix 
 
@@ -27,11 +27,11 @@ Next Feature List:
 
 //* Ryan> Fix keyboard controls to only apply when inputs are non-focused.//
 
-* Ryan> Clear console logs.
+//* Ryan> Clear console logs. //
 
 //* Ryan> Ball needs disappear before first rendering. //
 
-* Ryan> Add cannon and moving platform
+//* Ryan> Add cannon and moving platform //
 
 * Ryan> Clean up code - add comments and clarity.
 
