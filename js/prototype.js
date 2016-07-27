@@ -60,7 +60,9 @@ $(function(){
 
 var varsOriginal = { 
 y: 300,
+yi: 300,
 x: 0,
+xi: 0,
 Vx: Math.sqrt(3200),
 Vy: Math.sqrt(3200),
 v: Math.sqrt(Math.pow(Math.sqrt(3200),2)+Math.pow(Math.sqrt(3200),2)),
@@ -77,7 +79,7 @@ var stepNow = 0;
 // T will always exist in every problem at every step, but must be set based on problem.
 var t = 0;
 // Tdelta is how much time changes with each animation step.
-var tDelta = .1; 
+var tDelta = .2; 
 
 //Step 0 really is the original!
 varsOriginal.t = t;
@@ -105,7 +107,6 @@ varsAtStep[step] = varsNow;
 console.log("varsOriginal: ", varsOriginal);
 console.log("varsNow: " , varsNow);
 console.log("varsAtStep: " , varsAtStep);
-console.log("graph: "+varsNow.x+", "+varsNow.y);
 
 //- END 2016-Jul-20 Brockman -----------------------------------------------------------
 
@@ -118,6 +119,7 @@ var originalTheta = Math.PI/4;
 var originalTimeStep = 0.05;
 
 var t = 0;
+/* Update to memory 26-Jul-2016
 //Cannon angle.
 var theta = Math.PI/4;
 //Initial position.
@@ -128,7 +130,7 @@ var v = originalV;
 //Initial acceleration components.
 var ax = originalAx;
 var ay = originalAy;
-
+*/
 // A clock.
 function time() {
 t += .01; 
@@ -136,9 +138,8 @@ t += .01;
 
 function varsCurrent() {
 	// TODO - pull this out of the in memory buffer of varsByStep.
-	return { theta: varsOriginal.theta, xi: varsOriginal.x, yi: varsOriginal.y, v: varsOriginal.v, ax: varsOriginal.Ax, ay: varsOriginal.Ay, t: t };
+	return { theta: varsNow.theta, xi: varsOriginal.xi, yi: varsOriginal.yi, v: varsOriginal.v, Vx: varsOriginal.Vx, Vy: varsOriginal.Vy, ax: varsOriginal.Ax, ay: varsOriginal.Ay, t: t };
 }
-console.log("v: "+varsOriginal.v);
 //These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
 function x(t) {
 
@@ -224,8 +225,8 @@ function reset() {
 	stop();
 	d3.selectAll("circle")
 		.attr("visibility", "hidden")
-		.attr("cx", function(d) { return xView(xi); })	  				
-		.attr("cy", function(d) { return yView(yi); }); 
+		.attr("cx", function(d) { return xView(varsNow.xi); })	  				
+		.attr("cy", function(d) { return yView(varsNow.yi); }); 
 	t = 0;
 	document.getElementById("startStop").setAttribute("value", "Start");
 	document.getElementById("startStop").setAttribute("onclick", "start()");
@@ -341,9 +342,9 @@ function applyTrail() {
 
 //Moves ground.
 function groundAndPlatform() { 
-	if (yi <= 300) {
-		var lineData = [ { "x": 0,     "y": yView(yi)},  
-		          		 { "x": 1000,  "y": yView(yi)},
+	if (varsNow.yi <= 300) {
+		var lineData = [ { "x": 0,     "y": yView(varsOriginal.yi)},  
+		          		 { "x": 1000,  "y": yView(varsOriginal.yi)},
 		                 { "x": 1000,  "y": 1000}, 
 		                 { "x": 0,   "y": 1000} ];
 		var lineFunction = d3.svg.line()
@@ -353,9 +354,9 @@ function groundAndPlatform() {
 		$("#ground").attr("d", lineFunction(lineData));
 		$("#platform").attr("d", "M0 0");
 	}
-	else if (yi > 300) {
-		var lineData = [ { "x": 0,     "y": yView(yi)},  
-		          		 { "x": 20,  "y": yView(yi)},
+	else if (varsNow.yi > 300) {
+		var lineData = [ { "x": 0,     "y": yView(varsOriginal.yi)},  
+		          		 { "x": 20,  "y": yView(varsOriginal.yi)},
 		                 { "x": 20,  "y": 720}, 
 		                 { "x": 0,   "y": 720} ];
 		var lineFunction = d3.svg.line()
@@ -377,14 +378,14 @@ $("*").change(function () {
 
 
 function resetValues() {
-	yi = originalY;
-	v = originalV;
-	ay = originalAy;
+	varsNow.yi = varsOriginal.yi;
+	varsNow.v = varsOriginal.v;
+	varsNow.Ay = varsOriginal.Ay;
 
-	$("#input").val(originalY);
-	$("#input2").val(originalV);
-	$("#input3").val(-originalAy);
-	$("#input5").val(originalTheta*180/Math.PI)
+	$("#input").val(varsOriginal.yi);
+	$("#input2").val(varsOriginal.v);
+	$("#input3").val(varsOriginal.Ay);
+	$("#input5").val(varsOriginal.theta*180/Math.PI)
 	
 	/*
 	text1.value = originalY;
@@ -398,17 +399,17 @@ function resetValues() {
 function onloadFunction() {
 
 	$("#input").change(function () { 	
-							yi = +$("#input").val();
+							varsNow.yi = +$("#input").val();
 							reset();
 						});
 
 	$("#input2").change(function () { 
-							v = +$("#input2").val(); 
+							varsNow.v = +$("#input2").val(); 
 							reset();
 						});
 
 	$("#input3").change(function () { 
-							ay = +$("#input3").val(); 
+							varsNow.Ay = +$("#input3").val(); 
 							reset();
 						});
 
@@ -418,9 +419,9 @@ function onloadFunction() {
 						});
 	$("#input5").change(function () { 
 							$("#input5").each(function () {
-								theta = parseFloat($(this).val());
+								varsNow.theta = parseFloat($(this).val());
 							});
-							theta = theta*Math.PI/180;
+							varsNow.theta = varsNow.theta*Math.PI/180;
 							reset();
 						});
 
