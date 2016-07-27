@@ -61,8 +61,9 @@ $(function(){
 var varsOriginal = { 
 y: 300,
 x: 0,
-Vx: 57,
-Vy: 57,
+Vx: Math.sqrt(3200),
+Vy: Math.sqrt(3200),
+v: Math.sqrt(Math.pow(Math.sqrt(3200),2)+Math.pow(Math.sqrt(3200),2)),
 Ay: -10,
 Ax: 0,
 theta: Math.PI/4
@@ -76,7 +77,7 @@ var stepNow = 0;
 // T will always exist in every problem at every step, but must be set based on problem.
 var t = 0;
 // Tdelta is how much time changes with each animation step.
-var tDelta = 1; 
+var tDelta = .1; 
 
 //Step 0 really is the original!
 varsOriginal.t = t;
@@ -99,7 +100,6 @@ varsNow.x = (varsPrevious.Vx+varsPrevious.Ax*varsPrevious.t)*tDelta+varsPrevious
 varsNow.y = (varsPrevious.Vy+varsPrevious.Ay*varsPrevious.t)*tDelta+varsPrevious.y;
 
 varsAtStep[step] = varsNow;
-console.log("graph: "+varsNow.x+", "+varsNow.y);
 }
 
 console.log("varsOriginal: ", varsOriginal);
@@ -136,8 +136,9 @@ t += .01;
 
 function varsCurrent() {
 	// TODO - pull this out of the in memory buffer of varsByStep.
-	return { theta: theta, xi: xi, yi: yi, v: v, ax: ax, ay: ay, t: t };
-};
+	return { theta: varsOriginal.theta, xi: varsOriginal.x, yi: varsOriginal.y, v: varsOriginal.v, ax: varsOriginal.Ax, ay: varsOriginal.Ay, t: t };
+}
+console.log("v: "+varsOriginal.v);
 //These are parametric functions governing motion. This would come from the IWP XML file, user defined. 
 function x(t) {
 
@@ -181,6 +182,7 @@ function move() {
 		.attr("visibility", "visible")
 		.attr("cx", function(d) { return xView(x(t)); } )	  				
 		.attr("cy", function(d) { return yView(y(t)); } ); 
+	applyTrail();
 	//Debugging Code
 	/*(function () {
 		console.log ("y position = " + d3.selectAll("circle").attr("cy"));
@@ -317,14 +319,11 @@ function applyTrail() {
 	
 	//Sample set of coordinates to create line.
 	var lineData = [];
-
-	                 
-
-
 	// THIS wil totally break
 	// 2016-Jul-20
-	lineData = varsAtStep;
-
+	var currentIteration = Math.round(t/tDelta);
+	//console.log("current iteration: "+currentIteration);
+	lineData = varsAtStep.slice(0, currentIteration);
 	//Acesses data in array and extracts coordinates.
 	var lineFunction = d3.svg.line()
 								.x(function(d) { return xView(d.x); })
@@ -424,8 +423,6 @@ function onloadFunction() {
 							theta = theta*Math.PI/180;
 							reset();
 						});
-
-	applyTrail();
 
 	$("#ballX").change(function() { parseEquationsFromUserInput(); reset(); });
 	$("#ballY").change(function() { parseEquationsFromUserInput(); reset(); });
