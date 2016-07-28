@@ -23,14 +23,19 @@ Next Feature List:
 //* Ryan> Clear console logs. //
 //* Ryan> Ball needs disappear before first rendering. //
 //* Ryan> Add cannon and moving platform //
+//* Ryan> Clean up code - add comments and clarity.//
+//* Ryan> Table css / format fix //
+//* Ryan> Fix inputs.//
 
-* Ryan> Table css / format fix 
+* Ryan> Make object trail and ball line up better.
 
-* Ryan> Fix inputs.
+* Ryan> Object trail must go both ways.
 
-* Ryan> Which path is right???
+* Ryan> Clean up css file.
 
-* Ryan> Clean up code - add comments and clarity.
+* Taylor> What’s up with the glitching?
+
+
 
 
 * Taylor> Iterate over all of the problems, and produce big tables that are every calcualtion at every timestep for every variable.

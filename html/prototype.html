@@ -32,7 +32,7 @@
 		<path d="M 0 800 H 1000" stroke="lightgray" fill="transparent"/>
 		<path d="M 0 900 H 1000" stroke="lightgray" fill="transparent"/>
 		<!-- Object trail. -->
-		<polyline  id="objectTrail" fill="none" stroke="blue" stroke-width="2" points=""/>
+		<g  id="objectTrail"></g>
 		<!-- The projectile. -->
 		<circle visibility="hidden" r="8" fill="green"></circle>
 		<!-- The ground. -->
@@ -52,7 +52,7 @@
 			<td id="addMe">
 				<input id="reset" type="button" onclick="reset()" value="Reset"></input>
 			</td>
-			<td>
+			<td id="buttonControls">
 				<span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
 				<span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
 				<span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
@@ -73,11 +73,11 @@
 			</tr>
 			<tr class="bottomBorder">
 				<td> Ball X Eqn </td>
-				<td><input id="ballX" type="text" value="0.5*ax*pow(t, 2) + Vx*t*cos(theta) + xi"/></td>
+				<td><input id="ballX" type="text" value="0.5*ax*pow(t, 2) + Vx*t + xi"/></td>
 			</tr>
 			<tr class="bottomBorder">
 				<td> Ball Y Eqn </td>
-				<td><input id="ballY" type="text" value="0.5*ay*pow(t, 2) + Vy*t*sin(theta) + yi"/></td>
+				<td><input id="ballY" type="text" value="0.5*ay*pow(t, 2) + Vy*t + yi"/></td>
 			</tr>
 			<tr class="bottomBorder">
 				<td> Cannon Height </td>
