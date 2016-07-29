@@ -9,7 +9,14 @@
 
   <div id="problem" problem-uri="clone-problemServer/packagedProblems/Oscillations/shm-01.json"></div>
 
-  <h3 id="authorUsername">Loading...</h3>
+  <h3>Canvas</h3>
+    <div id="canvasDiv">
+      <svg id="canvas" width="500" height="500" viewbox="0 0 1000 1000" preserveAspectRatio="xMinYMin meet">
+    </div>
+  </svg>
+
+  <h3>Author</h3>
+    <div id="authorUsername">Loading...</div>
 
   <h3>Time</h3>
   <div id="time">
@@ -182,9 +189,68 @@
     }
 
 
+
+
+    var canvasBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
+
+    function yCanvas(y) {
+    // RYAN START HERE
+      return canvasBox.maxY -1*y;
+    };
+
+    function xCanvas(x) {
+    // the proportional entry point in from window.xmin -> window.xmax needs to be interpolated into the 
+    // propotional exit point between viewbox.minX -> viewbox.maxX 
+
+      xDomain = iwindow.xmax - iwindow.xmin;
+      xProportion = x / xDomain;
+
+      // xProprotion is a value between -1 -> 1
+      // xproprtion + 1 is a value between 0 -> 2
+
+      xCorrected = xProportion + 0.5
+    
+      console.log("json:205: x:  ", x, "  xDomain: ", xDomain,  "  xProportion: ", xProportion, "  xCorrected: ", xCorrected );
+
+      cDomain = canvasBox.maxX - canvasBox.minX;
+      cProportion = xCorrected * cDomain
+
+      return cProportion;
+    };
+
     function renderCanvasFromMemory() { 
 
+      var c = $("#canvas");
 
+      // Parse viewbox attributes from canvas to override defaults.
+      var canvasBoxAttrs = c[0].getAttribute("viewBox").split(" ");
+      canvasBox= { minX: parseFloat(canvasBoxAttrs[0]), minY: parseFloat(canvasBoxAttrs[1]), maxX: parseFloat(canvasBoxAttrs[2]), maxY: parseFloat(canvasBoxAttrs[3]) };
+
+
+      // To Render the window is that we start at the Xmin, and draw full vertial lines, 
+      // increment by xgrid,
+      // stopping at xmax
+
+      
+
+
+
+      // Add X gridlines -- TODO CONVERT TO A FOR LOOP
+      c.append( "<path d='M " + xCanvas(-8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(-6) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(-4) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(-2) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(0) + " 0 V 1000' stroke='black' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(2) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(4) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(6) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      c.append( "<path d='M " + xCanvas(8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+
+
+      // Blitting / Doubble buffering approach
+      // redraw a single time!
+      // http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
+      $("#canvasDiv").html($("#canvasDiv").html());
     }
 
     function addSolidsToCanvas(solids) {
