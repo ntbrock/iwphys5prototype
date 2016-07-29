@@ -12,13 +12,25 @@
   <h3 id="authorUsername">Loading...</h3>
 
   <h3>Time</h3>
-  <div id="time"></div>
+  <div id="time">
+    <span id="digClock"></span>
+    OTHER TIME CONTROLS SHOULD BE BROUGHT IN
+  </div>
 
   <h3>Description</h3>
   <div id="description"></div>
 
-  <h3>Window</h3>
-  <div id="window"></div>
+  <h3>Window Settings</h3>
+  <div id="iwindow">
+    X min: <input id="iwindow_xmin" type="text"><br/>
+    X max: <input id="iwindow_xmax" type="text"><br/>
+    X grid: <input id="iwindow_xgrid" type="text"><br/>
+    X unit: <input id="iwindow_xunit" type="text"><br/>
+    Y min: <input id="iwindow_ymin" type="text"><br/>
+    Y max: <input id="iwindow_ymax" type="text"><br/>
+    Y grid: <input id="iwindow_ygrid" type="text"><br/>
+    Y unit: <input id="iwindow_yunit" type="text"><br/>
+</div>
 
   <h3>GraphWindow</h3>
   <div id="graphWindow"></div>
@@ -41,27 +53,36 @@
 
     var time = {};
     var description = "";
-    var window = {};
+    var iwindow = {};
     var graphWindow = {};
     var inputs = [];
     var outputs = [];
     var solids = [];
 
 
-    function setTime(window) { 
-
+    // "time": { "start": "0.0", "stop": "5.0", "change": "0.02",  "fps": "25.0" },
+    function setTime(inTime) { 
+       console.log("time :", inTime);
+       time = inTime;
     }
 
-    function setDescription(window) { 
-
+    // "description": { "text": "A ball is attached to a horizontal spring (not shown) which causes the ball to oscillate about the origin. Run the animation until it stops. Click on Show graph. \n\nWhich graph represents position vs. time?  How do you know?\nWhich graph represents velocity vs. time?  How do you know?\nWhich graph represents acceleration vs. time?  How do you know?\n\nWhat would a graph of net force on the ball vs. time look like?  Why?" 
+    function setDescription(inDescription) { 
+       console.log("description :", inDescription);
+       description = inDescription;
     }
 
-    function setWindow(window) { 
-
+    // "window": { "xmin": "-10.0", "xmax": "10.0", "ymin": "-10.0", "ymax": "10.0", "xgrid": "2.0", "ygrid": "1.0", "xunit": "meters", "yunit": "meters"
+    function setWindow(inWindow) { 
+      console.log("window :", inWindow);
+      iwindow = inWindow;
     }
 
-    function setGraphWindow(graphWindow) {
 
+    // "GraphWindow": { "xmin": "0.0", "xmax": "5.0", "ymin": "-50.0", "ymax": "50.0", "xgrid": "0.5", "ygrid": "10.0"
+    function setGraphWindow(inGraphWindow) {
+      console.log("graphWindow :", inGraphWindow);
+      graphWindow = inGraphWindow;
     }
 
 
@@ -92,6 +113,19 @@
 
       $("#authorUsername").html( problem.author.username );
 
+      // Time
+      setTime(problem.objects.time);
+
+      // Description
+      setDescription(problem.objects.description);
+
+      // Window
+      setWindow(problem.objects.window);
+
+      // GraphWindow
+      setGraphWindow(problem.objects.graphWindow);
+
+
       // Inputs - These could be an array OR a single item.
       if ( $.type ( problem.objects.input ) == 'array' ) { 
         $.each( problem.objects.input, function( index, input ) {
@@ -120,17 +154,43 @@
       }
     }
 
-
     function renderProblemFromMemory() { 
       // Render from memory into page
-      $("#time").html( time );
-      $("#description").html( description );
-      $("#window").html( window );
-      $("#graphWindow").html( graphWindow );
+
+      $("#digClock").html( time.start );
+      $("#description").html( description.text );
+    
+    console.log("setting xmin val: ", iwindow.xmin );
+      $("#iwindow_xmin").val( iwindow.xmin );
+      $("#iwindow_xmax").val( iwindow.xmax );
+      $("#iwindow_xgrid").val( iwindow.xgrid );
+      $("#iwindow_xunit").val( iwindow.xunit );
+      $("#iwindow_ymax").val( iwindow.ymax );
+      $("#iwindow_ymin").val( iwindow.ymin );
+      $("#iwindow_ygrid").val( iwindow.ygrid );
+      $("#iwindow_yunit").val( iwindow.yunit );
+
+    // GraphWindow is a TODO feature for now.
+    // $("#graphWindow").html( graphWindow );
+    
       $("#inputs").html( inputs.join(" ") );
       $("#outputs").html( outputs.join(" ") );
       $("#solids").html( solids.join(" ") );
+
+      renderCanvasFromMemory();
+      addSolidsToCanvas(solids);
     }
+
+
+    function renderCanvasFromMemory() { 
+
+
+    }
+
+    function addSolidsToCanvas(solids) {
+
+    }
+
 
     // On Pageload, pull our hardcoded unit test.
     $.getJSON( $('#problem').attr('problem-uri'), function( problem ) {
