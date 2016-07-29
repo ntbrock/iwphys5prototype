@@ -45,43 +45,51 @@ $(function(){
 /**
  * 2016-Jul-20 Concept for creating a associate hash of variable -> value
  */
-//Create original variable array.
-var varsOriginal = { 
-y: 300,
-yi: 300,
-x: 0,
-xi: 0,
-Vx: Math.sqrt(3200),
-Vy: Math.sqrt(3200),
-v: Math.sqrt(Math.pow(Math.sqrt(3200),2)+Math.pow(Math.sqrt(3200),2)),
-Ay: -10,
-Ax: 0,
-theta: Math.PI/4
-}
+//Create initial variable array for applet.
+var varsInitial = {
+	y: 300,
+	yi: 300,
+	x: 0,
+	xi: 0,
+	Vx: Math.sqrt(3200),
+	Vy: Math.sqrt(3200),
+	v: Math.sqrt(Math.pow(Math.sqrt(3200),2)+Math.pow(Math.sqrt(3200),2)),
+	Ay: -10,
+	Ax: 0,
+	theta: Math.PI/4	
+};
+//Create original variable array for simulation.
+var varsOriginal = {};
+$.extend(varsOriginal, varsInitial);
 // Initialize the memory space for the large array that holds all histroical values
 var varsAtStep = [];
-// Initialize time - the big bang!
-var stepNow = 0;
 // T will always exist in every problem at every step, but must be set based on problem.
 var t = 0;
 // Tdelta is how much time changes with each animation step.
 var tDelta = .2; 
-//Step 0 really is the original!
-varsOriginal.t = t;
-varsAtStep[0] = varsOriginal;
-// Run the simulation forward in time, step by step.
-for ( var step = 1; step <= 100; step++ ) { 
-var varsPrevious = varsAtStep[step-1];
 var varsNow = {};
-$.extend(varsNow, varsPrevious);
-//console.log("step: ", step, " varsPrevious: ", varsPrevious);
-// 1. Advance time
-varsNow.t = varsPrevious.t + tDelta;
-// Do the calcs here
-varsNow.x = (varsPrevious.Vx+varsPrevious.Ax*varsPrevious.t)*tDelta+varsPrevious.x;	
-varsNow.y = (varsPrevious.Vy+varsPrevious.Ay*varsPrevious.t)*tDelta+varsPrevious.y;
-varsAtStep[step] = varsNow;
-}
+// Run the simulation forward in time, step by step.
+function createMemory () {
+	// Initialize time - the big bang!
+	var stepNow = 0;
+	varsAtStep[0] = varsOriginal;
+	//Step 0 really is the original!
+	varsOriginal.t = t;
+	for ( var step = 1; step <= 100; step++ ) { 
+	var varsPrevious = varsAtStep[step-1];
+	varsNow = {};
+	$.extend(varsNow, varsPrevious);
+	//console.log("step: ", step, " varsPrevious: ", varsPrevious);
+	// Advance time
+	varsNow.t = varsPrevious.t + tDelta;
+	// Do the calcs here
+	varsNow.x = (varsPrevious.Vx+varsPrevious.Ax*varsPrevious.t)*tDelta+varsPrevious.x;	
+	varsNow.y = (varsPrevious.Vy+varsPrevious.Ay*varsPrevious.t)*tDelta+varsPrevious.y;
+	varsAtStep[step] = varsNow;
+	};
+};
+createMemory();
+
 //Debugging 20 Jul 2016
 //console.log("varsOriginal: ", varsOriginal);
 //console.log("varsNow: " , varsNow);
@@ -111,6 +119,7 @@ var ay = originalAy;
 */
 
 // A clock.
+var currentIteration = 0;
 var t = 0;
 function time() {
 t += .01; 
@@ -206,6 +215,8 @@ function reset() {
 	document.getElementById("startStop").setAttribute("value", "Start");
 	document.getElementById("startStop").setAttribute("onclick", "start()");
 	hideReset();
+	groundAndPlatform();
+	createMemory();
 }
 function showReset() {
 	document.getElementById("reset").style.visibility = "visible";
@@ -263,7 +274,7 @@ function forwardTick() {
 forwardTickButton = document.getElementById("forwardTick");
 backTickButton = document.getElementById("backTick");
 //Set arrow tick to keyboard control.
-function keyboardControl() {
+/*function keyboardControl() {
 	document.addEventListener('keydown', (event) => {
 		const keyName = event.key;
 		if (keyName === 'ArrowRight' && $("#input").is(":not(:focus)") && $("#input2").is(":not(:focus)") && $("#input3").is(":not(:focus)") && $("#input4").is(":not(:focus)") && $("#ballX").is(":not(:focus)") && $("#ballY").is(":not(:focus)")) {
@@ -284,18 +295,22 @@ function keyboardControl() {
 	}
 	}, false);
 }
-keyboardControl();
+keyboardControl();*/
 //Ugh... we need to make an object trail. Plan: create a data set with points and previous points, and apply it as the points atttribute for a polyline.
 //https://www.dashingd3js.com/svg-paths-and-d3js2		
-var svgContainer = d3.select("svg")
+var svgContainer = d3.select("svg");
+//Sample set of coordinates to create line.
+var lineData = [];
 function applyTrail() {
-	//Sample set of coordinates to create line.
-	var lineData = [];
 	// THIS wil totally break
 	// 2016-Jul-20
-	var currentIteration = Math.round(t/tDelta);
 	//console.log("current iteration: "+currentIteration);
+	currentIteration = Math.ceil(t/tDelta);
 	lineData = varsAtStep.slice(0, currentIteration);
+	/* Debugging 28 Jul 2016
+	console.log("lineData: "+lineData);
+	console.log("t: "+t); */
+	//console.log("lineFunction: "+lineFunction(lineData));
 	//Acesses data in array and extracts coordinates.
 	var lineFunction = d3.svg.line()
 								.x(function(d) { return xView(d.x); })
@@ -303,17 +318,16 @@ function applyTrail() {
 								.interpolate("linear");
 	var svgContainer = d3.select("g");
 	//Line path.
-	var lineGraph = svgContainer.append("path")
+	var lineGraph = $("#objectTrail")
 								.attr("d", lineFunction(lineData))
-								.attr("stroke", "blue")
-								.attr("stroke-width", 2)
-								.attr("fill", "none")
+								.attr("stroke-width", 2);
 };
+setInterval("applyTrail()", 100);
 //Moves ground.
-function groundAndPlatform() { 
-	if (varsNow.yi <= 300) {
-		var lineData = [ { "x": 0,     "y": yView(varsNow.yi)},  
-		          		 { "x": 1000,  "y": yView(varsNow.yi)},
+function groundAndPlatform () { 
+	if (varsOriginal.y <= 300) {
+		var lineData = [ { "x": 0,     "y": yView(varsOriginal.y)},  
+		          		 { "x": 1000,  "y": yView(varsOriginal.y)},
 		                 { "x": 1000,  "y": 1000}, 
 		                 { "x": 0,   "y": 1000} ];
 		var lineFunction = d3.svg.line()
@@ -323,9 +337,9 @@ function groundAndPlatform() {
 		$("#ground").attr("d", lineFunction(lineData));
 		$("#platform").attr("d", "M0 0");
 	}
-	else if (varsNow.yi > 300) {
-		var lineData = [ { "x": 0,     "y": yView(varsNow.yi)},  
-		          		 { "x": 20,  "y": yView(varsNow.yi)},
+	else if (varsOriginal.y > 300) {
+		var lineData = [ { "x": 0,     "y": yView(varsOriginal.y)},  
+		          		 { "x": 20,  "y": yView(varsOriginal.y)},
 		                 { "x": 20,  "y": 720}, 
 		                 { "x": 0,   "y": 720} ];
 		var lineFunction = d3.svg.line()
@@ -344,13 +358,15 @@ $("*").change(function () {
 });
 //Resets values to original parameters.
 function resetValues() {
-	varsNow.yi = varsOriginal.yi;
-	varsNow.v = varsOriginal.v;
-	varsNow.Ay = varsOriginal.Ay;
-	$("#input").val(varsOriginal.yi);
-	$("#input2").val(varsOriginal.v);
-	$("#input3").val(-varsOriginal.Ay);
-	$("#input5").val(varsOriginal.theta*180/Math.PI)
+	varsOriginal.yi = varsInitial.yi;
+	varsOriginal.y = varsInitial.y;
+	varsOriginal.v = varsInitial.v;
+	varsOriginal.Ay = varsInitial.Ay;
+	varsOriginal.theta = varsInitial.theta;
+	$("#input").val(varsInitial.yi);
+	$("#input2").val(varsInitial.v);
+	$("#input3").val(-varsInitial.Ay);
+	$("#input5").val(varsInitial.theta*180/Math.PI);
 	/*
 	text1.value = originalY;
 	text2.value = originalV;
@@ -361,22 +377,28 @@ function resetValues() {
 // Some elements of code must wait for HTML load to call elements - included below, and tied to html onload event.
 function onloadFunction() {
 	$("#input").change(function () { 	
-							varsNow.yi = +$("#input").val();
+							varsOriginal.yi = +$("#input").val();
+							varsOriginal.y = +$("#input").val();
 							reset();
+							/* Debugging 28 Jul 2016
+							console.log(varsOriginal.yi);
+							console.log(varsAtStep[0]);
+							console.log(varsNow.y);
+							console.log(varsAtStep[5]);*/
 						});
 
 	$("#input2").change(function () { 
 							$("#input2").each(function () {
-								varsNow.v = parseFloat($(this).val());
+								varsOriginal.v = parseFloat($(this).val());
 							});
-							varsNow.Vx = varsNow.v*Math.cos(varsNow.theta);
-							varsNow.Vy = varsNow.v*Math.sin(varsNow.theta);
+							varsOriginal.Vx = varsOriginal.v*Math.cos(varsOriginal.theta);
+							varsOriginal.Vy = varsOriginal.v*Math.sin(varsOriginal.theta);
 							reset();
 						});
 
 	$("#input3").change(function () { 
-							varsNow.Ay = -(+$("#input3").val()); 
-							console.log("varsNow: "+varsNow);
+							varsOriginal.Ay = -(+$("#input3").val()); 
+							//console.log("varsOriginal: "+varsOriginal);
 							reset();
 						});
 
@@ -386,9 +408,9 @@ function onloadFunction() {
 						});
 	$("#input5").change(function () { 
 							$("#input5").each(function () {
-								varsNow.theta = parseFloat($(this).val());
+								varsOriginal.theta = parseFloat($(this).val());
 							});
-							varsNow.theta = varsNow.theta*Math.PI/180;
+							varsOriginal.theta = varsOriginal.theta*Math.PI/180;
 							reset();
 						});
 
