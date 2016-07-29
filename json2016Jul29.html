@@ -1,0 +1,144 @@
+<html><head><title>JSON navigation sample - 2016Jul29</title>
+
+    <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
+
+</head>
+
+<body>
+  <h1>IWP JSON Parsing Unit Test</h1>
+
+  <div id="problem" problem-uri="clone-problemServer/packagedProblems/Oscillations/shm-01.json"></div>
+
+  <h3 id="authorUsername">Loading...</h3>
+
+  <h3>Time</h3>
+  <div id="time"></div>
+
+  <h3>Description</h3>
+  <div id="description"></div>
+
+  <h3>Window</h3>
+  <div id="window"></div>
+
+  <h3>GraphWindow</h3>
+  <div id="graphWindow"></div>
+
+  <h3>Inputs</h3>
+  <div id="inputs"></div>
+
+  <h3>Outputs</h3>
+  <div id="outputs"></div>
+
+  <h3>Solids</h3>
+  <div id="solids"></div>
+
+
+  <hr/>
+
+
+
+  <script type="text/javascript">
+
+    var time = {};
+    var description = "";
+    var window = {};
+    var graphWindow = {};
+    var inputs = [];
+    var outputs = [];
+    var solids = [];
+
+
+    function setTime(window) { 
+
+    }
+
+    function setDescription(window) { 
+
+    }
+
+    function setWindow(window) { 
+
+    }
+
+    function setGraphWindow(graphWindow) {
+
+    }
+
+
+    function addInput(input) { 
+      console.log("input: ", input );
+      // {name: "ar", text: "Amplitude", initialValue: "9.0", units: "m"}
+      inputs.push( "<div id='input_" + input.name + "'><label for='"+ input.name +"'>"+ input.text +"</label> <input id='" + input.name + "' type='text' value='" + input.initialValue + "'> " + input.units + "</div>");
+    }
+
+    function addOutput(output) { 
+      console.log("output ", output );
+   
+      // { "name": "axr", "text": "Acceleration", "units": "m/ss", "calculator": { "@attributes": { "type": "parametric" }, "value": "Red.xaccel" } }
+      outputs.push( "<div id='output_" + output.name + "'><label for='"+ output.name +"'>"+ output.text +"</label> <input id='" + output.name + "' type='text' value='-999'> " + output.units + "</div>");
+    }
+
+    function addSolid(solid) { 
+      console.log("solid: ", solid );
+      solids.push( "<p style='background-color: rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ");'> " + solid.name + "</p>" );
+    }
+
+
+
+
+
+    
+    function parseProblemToMemory( problem ) { 
+
+      $("#authorUsername").html( problem.author.username );
+
+      // Inputs - These could be an array OR a single item.
+      if ( $.type ( problem.objects.input ) == 'array' ) { 
+        $.each( problem.objects.input, function( index, input ) {
+          addInput(input);
+        });
+      } else { 
+        addInput(problem.objects.input);
+      }
+
+      // Output - These could be an array OR a single item.
+      if ( $.type ( problem.objects.output ) == 'array' ) { 
+        $.each( problem.objects.output, function( index, output ) {
+          addOutput(output);
+        });
+      } else { 
+        addOutput(problem.objects.output);
+      }
+
+      // Solids - These could be an array OR a single item.
+      if ( $.type ( problem.objects.solid ) == 'array' ) { 
+        $.each( problem.objects.solid, function( index, solid ) {
+          addSolid(solid);
+        });
+      } else { 
+        addSolid(problem.objects.solid);
+      }
+    }
+
+
+    function renderProblemFromMemory() { 
+      // Render from memory into page
+      $("#time").html( time );
+      $("#description").html( description );
+      $("#window").html( window );
+      $("#graphWindow").html( graphWindow );
+      $("#inputs").html( inputs.join(" ") );
+      $("#outputs").html( outputs.join(" ") );
+      $("#solids").html( solids.join(" ") );
+    }
+
+    // On Pageload, pull our hardcoded unit test.
+    $.getJSON( $('#problem').attr('problem-uri'), function( problem ) {
+      parseProblemToMemory(problem);
+      renderProblemFromMemory();
+    });
+
+  </script>
+
+</body>
+<html>

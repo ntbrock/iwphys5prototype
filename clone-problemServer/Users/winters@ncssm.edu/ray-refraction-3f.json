@@ -1,0 +1,8 @@
+<br />
+<b>Warning</b>:  simplexml_load_string(): Entity: line 38: parser error : Input is not proper UTF-8, indicate encoding !
+Bytes: 0xB0 0x3F 0x3C 0x2F in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+<br />
+<b>Warning</b>:  simplexml_load_string(): the angle of incidence. What will happen when the angle of refraction reaches 90 in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+<br />
+<b>Warning</b>:  simplexml_load_string():                                                                                ^ in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+false

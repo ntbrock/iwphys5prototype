@@ -23,6 +23,8 @@ urlencode() {
 FOUND_FILE=foundIwpFiles.list
 find . -type f|grep [.]iwp\$ > $FOUND_FILE
 
+# Pre-clean json files
+find . -name *.json -exec rm -f {} \;
 
 while read IWP_FILE; do
   echo $IWP_FILE
@@ -32,7 +34,7 @@ while read IWP_FILE; do
   #URL_FILE=`urlencode $IWP_FILE`
   #echo $URL_FILE
 
-  "curl 'https://www.iwphys.org/TEST_2016Jun10/xtoj.php/$IWP_FILE' > '$JSON_FILE'"
+  curl "https://www.iwphys.org/TEST_2016Jun10/xtoj.php/$IWP_FILE" > "$JSON_FILE"
 
 done <$FOUND_FILE
 

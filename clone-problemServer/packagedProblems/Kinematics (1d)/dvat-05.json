@@ -1,0 +1,8 @@
+<br />
+<b>Warning</b>:  simplexml_load_string(): Entity: line 104: parser error : Input is not proper UTF-8, indicate encoding !
+Bytes: 0xB2 0x3C 0x2F 0x75 in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+<br />
+<b>Warning</b>:  simplexml_load_string():  in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+<br />
+<b>Warning</b>:  simplexml_load_string(): 			          ^ in <b>/usr/share/nginx/www.iwphys.org/TEST_2016Jun10/xtoj.php</b> on line <b>13</b><br />
+false
