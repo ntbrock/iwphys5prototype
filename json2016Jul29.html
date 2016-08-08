@@ -1,8 +1,8 @@
-<html><head><title>JSON navigation sample - 2016Jul29</title>
-
+<html>
+  <head>
+    <title>JSON navigation sample - 2016Jul29</title>
     <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
-
-</head>
+  </head>
 
 <body>
   <h1>IWP JSON Parsing Unit Test</h1>
@@ -50,10 +50,6 @@
 
   <h3>Solids</h3>
   <div id="solids"></div>
-
-
-  <hr/>
-
 
 
   <script type="text/javascript">
@@ -107,8 +103,19 @@
     }
 
     function addSolid(solid) { 
-      console.log("solid: ", solid );
-      solids.push( "<p style='background-color: rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ");'> " + solid.name + "</p>" );
+      //console.log("solid: ", solid );
+      console.log("shape: ", solid.shape["@attributes"].type);
+      if (solid.shape["@attributes"].type == "circle") {
+        console.log("it's a circle");
+        solids.push( "<circle cx='' cy='' style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
+      }
+      else if (solid.shape["@attributes"].type == "rectangle") {
+        console.log("it's a rectangle");
+        solids.push( "< style='background-color: rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ");'> " + solid.name + "</p>" );
+      }
+      else {
+        return;
+      };
     }
 
 
@@ -154,7 +161,7 @@
       // Solids - These could be an array OR a single item.
       if ( $.type ( problem.objects.solid ) == 'array' ) { 
         $.each( problem.objects.solid, function( index, solid ) {
-          addSolid(solid);
+        addSolid(solid);
         });
       } else { 
         addSolid(problem.objects.solid);
@@ -167,7 +174,8 @@
       $("#digClock").html( time.start );
       $("#description").html( description.text );
     
-    console.log("setting xmin val: ", iwindow.xmin );
+    //Debugging 29 Jul 2016
+    //console.log("setting xmin val: ", iwindow.xmin );
       $("#iwindow_xmin").val( iwindow.xmin );
       $("#iwindow_xmax").val( iwindow.xmax );
       $("#iwindow_xgrid").val( iwindow.xgrid );
@@ -182,61 +190,58 @@
     
       $("#inputs").html( inputs.join(" ") );
       $("#outputs").html( outputs.join(" ") );
-      $("#solids").html( solids.join(" ") );
+      //Moved to addSolidsToCanvas, 8 Aug 2016
+      //$("#solids").html( solids.join(" ") );
 
       renderCanvasFromMemory();
       addSolidsToCanvas(solids);
-    }
-
-
-
+    };
 
     var canvasBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
-
     function yCanvas(y) {
-    // RYAN START HERE
-      return canvasBox.maxY -1*y;
+      var yDomain = iwindow.ymax - iwindow.ymin;
+      yProportion = y / yDomain;
+      yCorrected = yProportion + 0.5;
+      cDomain = canvasBox.maxY - canvasBox.minY;
+      cProportion = yCorrected * cDomain;
+      return cProportion;
     };
 
     function xCanvas(x) {
     // the proportional entry point in from window.xmin -> window.xmax needs to be interpolated into the 
     // propotional exit point between viewbox.minX -> viewbox.maxX 
-
-      xDomain = iwindow.xmax - iwindow.xmin;
+      var xDomain = iwindow.xmax - iwindow.xmin;
       xProportion = x / xDomain;
 
       // xProprotion is a value between -1 -> 1
       // xproprtion + 1 is a value between 0 -> 2
 
-      xCorrected = xProportion + 0.5
+      xCorrected = xProportion + 0.5;
     
-      console.log("json:205: x:  ", x, "  xDomain: ", xDomain,  "  xProportion: ", xProportion, "  xCorrected: ", xCorrected );
+      //Debugging 29 Jul 2016
+      //console.log("json:205: x:  ", x, "  xDomain: ", xDomain,  "  xProportion: ", xProportion, "  xCorrected: ", xCorrected );
 
       cDomain = canvasBox.maxX - canvasBox.minX;
-      cProportion = xCorrected * cDomain
+      cProportion = xCorrected * cDomain;
 
       return cProportion;
     };
-
+    function addSolidsToCanvas(solids) {
+      //console.log("solids: ", solids);
+      console.log("solids: ", solids);
+      //console.log("solids: ", )
+      $("#canvas").append("<circle cx='50' cy='50' r='40' stroke='black' stroke-width='3' fill='red' />");
+    }
     function renderCanvasFromMemory() { 
-
       var c = $("#canvas");
-
       // Parse viewbox attributes from canvas to override defaults.
       var canvasBoxAttrs = c[0].getAttribute("viewBox").split(" ");
       canvasBox= { minX: parseFloat(canvasBoxAttrs[0]), minY: parseFloat(canvasBoxAttrs[1]), maxX: parseFloat(canvasBoxAttrs[2]), maxY: parseFloat(canvasBoxAttrs[3]) };
-
-
       // To Render the window is that we start at the Xmin, and draw full vertial lines, 
       // increment by xgrid,
       // stopping at xmax
-
-      
-
-
-
       // Add X gridlines -- TODO CONVERT TO A FOR LOOP
-      c.append( "<path d='M " + xCanvas(-8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+      /*Shifted to for loop, 7 Aug 2016:c.append( "<path d='M " + xCanvas(-8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(-6) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(-4) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(-2) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
@@ -245,18 +250,40 @@
       c.append( "<path d='M " + xCanvas(4) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(6) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
-
+      */
+      var xGridlines = (iwindow.xmax - iwindow.xmin)/iwindow.xgrid;
+      for ( var interval = 1; interval <= xGridlines-1; interval ++ ) {
+        var xGridPosition = (interval - xGridlines/2)*iwindow.xgrid;
+        var coordinates = xCanvas(xGridPosition*iwindow.xgrid);;
+        //console.log("whatItShouldBe: "+xCanvas(xGridPosition*iwindow.xgrid)+", coordinates: "+coordinates);
+        if (xGridPosition == 0) {
+          c.append( "<path d='M " + xCanvas(xGridPosition) + " 0 V 1000' stroke='black' fill='transparent'/>" );
+        }
+        else {
+          c.append( "<path d='M " + xCanvas(xGridPosition) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
+        };
+      };
+      // Add Y gridlines
+      var yGridlines = (iwindow.ymax - iwindow.ymin)/iwindow.ygrid;
+      //Debugging 7 Aug 2016
+      //console.log("yGridlines: "+yGridlines);
+      for ( var interval = 1; interval <= yGridlines-1; interval ++ ) {
+        var yGridPosition = (interval - yGridlines/2)*iwindow.ygrid;
+        if (yGridPosition == 0) {
+          c.append( "<path d='M 0 " + yCanvas(yGridPosition) + " H 1000' stroke='black' fill='transparent'/>" );
+          //console.log("it's the origin");
+        }
+        else {
+          c.append( "<path d='M 0 " + yCanvas(yGridPosition) + " H 1000' stroke='lightgray' fill='transparent'/>" );
+          //console.log("it's not");
+        };
+      };
 
       // Blitting / Doubble buffering approach
       // redraw a single time!
       // http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
       $("#canvasDiv").html($("#canvasDiv").html());
     }
-
-    function addSolidsToCanvas(solids) {
-
-    }
-
 
     // On Pageload, pull our hardcoded unit test.
     $.getJSON( $('#problem').attr('problem-uri'), function( problem ) {
