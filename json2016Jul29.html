@@ -104,24 +104,19 @@
 
     function addSolid(solid) { 
       //console.log("solid: ", solid );
-      console.log("shape: ", solid.shape["@attributes"].type);
+      console.log("width: ", solid.shape.width.calculator.value);
       if (solid.shape["@attributes"].type == "circle") {
         console.log("it's a circle");
-        solids.push( "<circle cx='' cy='' style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
+        solids.push( "<circle cx='500' cy='500' r=" +proportion(solid.shape.width.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
       }
       else if (solid.shape["@attributes"].type == "rectangle") {
         console.log("it's a rectangle");
-        solids.push( "< style='background-color: rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ");'> " + solid.name + "</p>" );
+        //solids.push( "<rect...
       }
       else {
         return;
       };
     }
-
-
-
-
-
     
     function parseProblemToMemory( problem ) { 
 
@@ -226,11 +221,19 @@
 
       return cProportion;
     };
+    function proportion(size) {
+      var xDomain = iwindow.xmax - iwindow.xmin;
+      var cDomain = canvasBox.maxX - canvasBox.minX;
+      var proportion = cDomain/xDomain; 
+      return size*proportion;
+    }
+
     function addSolidsToCanvas(solids) {
       //console.log("solids: ", solids);
       console.log("solids: ", solids);
       //console.log("solids: ", )
-      $("#canvas").append("<circle cx='50' cy='50' r='40' stroke='black' stroke-width='3' fill='red' />");
+      $("#canvas").append(solids);
+      $("#canvasDiv").html($("#canvasDiv").html());
     }
     function renderCanvasFromMemory() { 
       var c = $("#canvas");
