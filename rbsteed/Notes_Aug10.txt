@@ -1,0 +1,6 @@
+Notes 10 Aug 2016
+
+
+Need to use math.js to parse stuff.
+Need to bring in calculators.
+Add conditions for line and rectangle.

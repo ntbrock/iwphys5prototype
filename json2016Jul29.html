@@ -20,8 +20,26 @@
 
   <h3>Time</h3>
   <div id="time">
-    <span id="digClock"></span>
-    OTHER TIME CONTROLS SHOULD BE BROUGHT IN
+    <table id="playBar">
+      <tr>  
+        <td class="bottomBorder">
+          <span>Time: </span>
+          <span id="digClock">0.00</span>
+        </td>
+        <td id="addMe">
+          <input id="reset" type="button" onclick="reset()" value="Reset"></input>
+        </td>
+        <td id="buttonControls">
+          <span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
+          <span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
+          <span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
+        </td>
+        <td class="bottomBorder">
+          <span>Time Step: </span>
+          <span><input id="input4" type="text" value="0.05" size="4em"/></span>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <h3>Description</h3>
@@ -47,10 +65,6 @@
 
   <h3>Outputs</h3>
   <div id="outputs"></div>
-
-  <h3>Solids</h3>
-  <div id="solids"></div>
-
 
   <script type="text/javascript">
 
@@ -112,6 +126,10 @@
       else if (solid.shape["@attributes"].type == "rectangle") {
         console.log("it's a rectangle");
         //solids.push( "<rect...
+      }
+      else if (solid.shape["@attributes"].type == "line") {
+        console.log("it's a line")
+        //solids.push( "<path d='M ...
       }
       else {
         return;
@@ -254,6 +272,7 @@
       c.append( "<path d='M " + xCanvas(6) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       c.append( "<path d='M " + xCanvas(8) + " 0 V 1000' stroke='lightgray' fill='transparent'/>" );
       */
+      
       var xGridlines = (iwindow.xmax - iwindow.xmin)/iwindow.xgrid;
       for ( var interval = 1; interval <= xGridlines-1; interval ++ ) {
         var xGridPosition = (interval - xGridlines/2)*iwindow.xgrid;
