@@ -1,6 +1,7 @@
 Notes 10 Aug 2016
 
 
-Need to use math.js to parse stuff.
-Need to bring in calculators.
+Need to use math.js to parse numbers and equations (1*10^9).
+Need to bring in calculators (move function).
 Add conditions for line and rectangle.
+What should initial positions be?

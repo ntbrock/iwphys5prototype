@@ -1,16 +1,121 @@
+/** 
+ * Interactive Web Physics 5 - Javascript SVG Animation Implementation
+ * Ryan Steed, Taylor Brockman 2016
+ */
+
+
+
+//-----------------------------------------------------------------------
+// Pseudocode for Mathematical Animation
+
+// Calculate Initial Variable Set from inputs.
+
+// Calculate at initial step to render displays
+
+// Calculate for each step as time ticks.
+
+// Provide a historical variable set at each tick (for trails, graphing).
+
+
+// What is a step? An interation that is a multiple of t delta.   Current T =   T0 + step * Tdelta
+// Set of the variables in their state at that point.
+// The inputs are replicated into each of the steps.
+// The object for the step is exactly what is passed into the equation calculation.
+// Need to support complex variables in the equation like ball.x
+
+var varsAtStep = [];
+var currentStep = 0;
+
+
+function queryUserFormInputDouble(input) {
+
+	var readValue = $("#" + input.name).val();
+	var doubleValue = parseFloat(readValue);
+	console.log("queryUserDefinedInput: for input: ", input, " readValue: ", readValue,  "  doubleValue: ", doubleValue );
+
+	// TODO if readValue doesn't make sense, then default back to input.initialValue;
+	
+	return doubleValue;
+}
+
+function calculateVarsAtStep(step) { 
+
+	// vars should be a map of string to double.
+	var vars = { step: step }
+
+	// Eveything begins with time, populate t.
+	vars.t = time.start + step * time.change;
+	vars.tDelta = time.change;
+
+
+	$.each( inputs, function( index, input ) {
+		// next load in variables for all of the inputs.
+		vars[input.name+".value"] = queryUserFormInputDouble(input);
+    });
+
+	/*
+	for each input
+
+		query the dom by input_$id to get the value from the user form
+
+
+	for each solid
+
+		sequence of the solids does matter in the problem file. 
+
+		for x, y
+
+			perform the calculator 
+
+		for h, w 
+
+			perform the calculator
+
+		-> update the DOM with theose new results
+
+
+	for each output
+
+			perofrm the calculator
+
+		-> update the DOM with the new reuslts.
+*/
+	console.log(" calculateVarsAtStep, vars = ", vars);
+	vars;
+
+}
+
+// After the problem parse, we want to call :   calculateVarsAtStep(currentStep = 0);
+
+
+//-----------------------------------------------------------------------
+
+
+
+
 var time = {};
 var description = "";
 var iwindow = {};
 var graphWindow = {};
+
 var inputs = [];
 var outputs = [];
 var solids = [];
+
+var htmlInputs = [];
+var htmlOutputs = [];
+var svgSolids = [];
 console.log("hello");
 
 // "time": { "start": "0.0", "stop": "5.0", "change": "0.02",  "fps": "25.0" },
 function setTime(inTime) { 
    console.log("time :", inTime);
-   time = inTime;
+   time = { 
+   	start : parseFloat(inTime.start),
+   	stop : parseFloat(inTime.stop),
+   	change : parseFloat(inTime.change),
+   	fps : parseFloat(inTime.fps)
+   };
 }
 
 // "description": { "text": "A ball is attached to a horizontal spring (not shown) which causes the ball to oscillate about the origin. Run the animation until it stops. Click on Show graph. \n\nWhich graph represents position vs. time?  How do you know?\nWhich graph represents velocity vs. time?  How do you know?\nWhich graph represents acceleration vs. time?  How do you know?\n\nWhat would a graph of net force on the ball vs. time look like?  Why?" 
@@ -34,28 +139,31 @@ function setGraphWindow(inGraphWindow) {
 
 
 function addInput(input) { 
-  console.log("input: ", input );
+  console.log("addInput: ", input );
+  inputs.push( input );
   // {name: "ar", text: "Amplitude", initialValue: "9.0", units: "m"}
-  inputs.push( "<tr id='input_" + input.name + "' class='bottomBorder'><td><label for='"+ input.name +"'>"+ input.text +"</label></td><td><input id='" + input.name + "' type='text' value='" + input.initialValue + "'> " + input.units + "</td></tr>");
+  htmlInputs.push( "<tr id='input_" + input.name + "' class='bottomBorder'><td><label for='"+ input.name +"'>"+ input.text +"</label></td><td><input id='" + input.name + "' type='text' value='" + input.initialValue + "'> " + input.units + "</td></tr>");
 }
 
 function addOutput(output) { 
-  console.log("output ", output );
-
+  console.log("addOutput ", output );
+  outputs.push( output );
   // { "name": "axr", "text": "Acceleration", "units": "m/ss", "calculator": { "@attributes": { "type": "parametric" }, "value": "Red.xaccel" } }
-  outputs.push( "<tr id='output_" + output.name + "' class='bottomBorder'><td><label for='"+ output.name +"'>"+ output.text +"</label></td><td><input id='" + output.name + "' type='text' value='-999'> " + output.units + "</td></tr>");
+  htmlOutputs.push( "<tr id='output_" + output.name + "' class='bottomBorder'><td><label for='"+ output.name +"'>"+ output.text +"</label></td><td><input id='" + output.name + "' type='text' value='-999'> " + output.units + "</td></tr>");
 }
 
 function addSolid(solid) { 
   //console.log("solid: ", solid );
-  console.log("width: ", solid.shape.width.calculator.value);
+  console.log("addSolid width: ", solid.shape.width.calculator.value);
+  solids.push(solid);
+
   if (solid.shape["@attributes"].type == "circle") {
     console.log("it's a circle");
-    solids.push( "<circle cx='500' cy='500' r=" +proportion(solid.shape.width.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
+    svgSolids.push( "<circle id='solid_" +solid.name+ "' cx='500' cy='500' r=" +proportion(solid.shape.width.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
   }
   else if (solid.shape["@attributes"].type == "rectangle") {
     console.log("it's a rectangle");
-    //solids.push( "<rect...
+    svgSolids.push( "<rect x='500' y='500' id='solid_" +solid.name+ "' width=" +proportion(solid.shape.width.calculator.value)+ " height=" +proportion(solid.shape.height.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
   }
   else if (solid.shape["@attributes"].type == "line") {
     console.log("it's a line")
@@ -131,12 +239,12 @@ function renderProblemFromMemory() {
 // GraphWindow is a TODO feature for now.
 // $("#graphWindow").html( graphWindow );
 
-  $("#variableTable").append("<tr><th colspan='2'>Inputs</th></tr>"+inputs+"<tr><th colspan='2'>Outputs</th></tr>"+outputs);
+  $("#variableTable").append("<tr><th colspan='2'>Inputs</th></tr>"+htmlInputs+"<tr><th colspan='2'>Outputs</th></tr>"+htmlOutputs);
   //Moved to addSolidsToCanvas, 8 Aug 2016
   //$("#solids").html( solids.join(" ") );
 
   renderCanvasFromMemory();
-  addSolidsToCanvas(solids);
+  addSolidsToCanvas(svgSolids);
 };
 
 var canvasBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
@@ -179,7 +287,8 @@ function addSolidsToCanvas(solids) {
   //console.log("solids: ", solids);
   console.log("solids: ", solids);
   //console.log("solids: ", )
-  $("#canvas").append(solids);
+  $("#canvas").append(svgSolids);
+  //Blitting effect
   $("#canvasDiv").html($("#canvasDiv").html());
 }
 function renderCanvasFromMemory() { 
