@@ -221,11 +221,11 @@ function addSolid(solid) {
   //HTML 
   if (solid.shape["@attributes"].type == "circle") {
     console.log("it's a circle");
-    svgSolids.push( "<circle id='solid_" +solid.name+ "' cx='500' cy='500' r=" +proportion(solid.shape.width.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
+    svgSolids.push( "<ellipse id='solid_" +solid.name+ "' cx='500' cy='500' rx=" +xWidth(solid.shape.width.calculator.value)+ " ry=" +yHeight(solid.shape.height.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
   }
   else if (solid.shape["@attributes"].type == "rectangle") {
     console.log("it's a rectangle");
-    svgSolids.push( "<rect x='500' y='500' id='solid_" +solid.name+ "' width=" +proportion(solid.shape.width.calculator.value)+ " height=" +proportion(solid.shape.height.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
+    svgSolids.push( "<rect x='500' y='500' id='solid_" +solid.name+ "' width=" +xWidth(solid.shape.width.calculator.value)+ " height=" +yHeight(solid.shape.height.calculator.value)+ " style='fill:rgb(" +solid.color.red+ "," +solid.color.green+ "," +solid.color.blue+ ")'> " );
   }
   else if (solid.shape["@attributes"].type == "line") {
     console.log("it's a line")
@@ -349,10 +349,10 @@ function parseProblemToMemory( problem ) {
 var canvasBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
 function yCanvas(y) {
   var yDomain = iwindow.ymax - iwindow.ymin;
-  yProportion = y / yDomain;
-  yCorrected = yProportion + 0.5;
-  cDomain = canvasBox.maxY - canvasBox.minY;
-  cProportion = yCorrected * cDomain;
+  var yProportion = y / yDomain;
+  var yCorrected = yProportion + 0.5;
+  var cDomain = canvasBox.maxY - canvasBox.minY;
+  var cProportion = yCorrected * cDomain;
   return cProportion;
 };
 
@@ -360,27 +360,35 @@ function xCanvas(x) {
 // the proportional entry point in from window.xmin -> window.xmax needs to be interpolated into the 
 // propotional exit point between viewbox.minX -> viewbox.maxX 
   var xDomain = iwindow.xmax - iwindow.xmin;
-  xProportion = x / xDomain;
+  var xProportion = x / xDomain;
 
   // xProprotion is a value between -1 -> 1
   // xproprtion + 1 is a value between 0 -> 2
 
-  xCorrected = xProportion + 0.5;
+  var xCorrected = xProportion + 0.5;
 
   //Debugging 29 Jul 2016
   //console.log("json:205: x:  ", x, "  xDomain: ", xDomain,  "  xProportion: ", xProportion, "  xCorrected: ", xCorrected );
 
-  cDomain = canvasBox.maxX - canvasBox.minX;
-  cProportion = xCorrected * cDomain;
+  var cDomain = canvasBox.maxX - canvasBox.minX;
+  var cProportion = xCorrected * cDomain;
 
   return cProportion;
 };
-function proportion(size) {
+
+function xWidth(size) {
   var xDomain = iwindow.xmax - iwindow.xmin;
   var cDomain = canvasBox.maxX - canvasBox.minX;
   var proportion = cDomain/xDomain; 
   return size*proportion;
-}
+};
+
+function yHeight(size) {
+  var yDomain = iwindow.ymax - iwindow.ymin;
+  var cDomain = canvasBox.maxY - canvasBox.minY;
+  var proportion = cDomain/yDomain; 
+  return size*proportion;
+};
 
 
 //--------------------------------------------------------------------------------
@@ -496,13 +504,58 @@ function updateUserFormOutputDouble(output, newValue) {
 
 function updateSolidSvgPathAndShape(solid, pathAndShape) { 
 	
-	var svgSolid = $("#" + solid.name);
+	var svgSolid = $("#solid_" + solid.name);
 
-	console.log("updateSolidSvgPathAndShape: ", svgSolid, pathAndShape);
+	console.log("updateSolidSvgPathAndShape: ", solid, svgSolid, pathAndShape);
 
 	// TODO , SVG Maniplation
 
 	// translate from math to visual.
+
+/*height
+:
+1
+width
+:
+1
+x
+:
+9
+xdisp
+:
+9
+y
+:
+0
+ydisp
+:
+0'*/
+if (solid.shape.type == "circle") {
+    svgSolid.attr("cx", xCanvas(pathAndShape.x))
+		.attr("cy", yCanvas(pathAndShape.y))
+		.attr("rx", xWidth(pathAndShape.width))
+		.attr("ry", yHeight(pathAndShape.height));
+  }
+  else if (solid.shape.type == "rectangle") {
+  	svgSolid.attr("x", xCanvas(pathAndShape.x))
+		.attr("y", yCanvas(pathAndShape.y))
+		.attr("width", xWidth(pathAndShape.width))
+		.attr("height", yHeight(pathAndShape.height));
+ }
+  else if (solid.shape.type == "line") {
+    console.log("it's a line");
+    //line...
+  }
+  else {
+  	console.log("!! Unidentified shape:550> solid = ", solid.shape.type);
+    return;
+  };
+
+
+/*for rectangle
+		x, y
+for line
+		lineData -> linear interpolation*/
 }
 
 
