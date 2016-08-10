@@ -53,16 +53,6 @@ varsConstants = { G : -9.8 }
 
 
 
-function queryUserFormInputDouble(input) {
-
-	var readValue = $("#" + input.name).val();
-	var doubleValue = parseFloat(readValue);
-	//console.log("queryUserDefinedInput: for input: ", input, " readValue: ", readValue,  "  doubleValue: ", doubleValue );
-
-	// TODO if readValue doesn't make sense, then default back to input.initialValue;
-	
-	return doubleValue;
-}
 
 function calculateVarsAtStep(step) { 
 
@@ -110,6 +100,7 @@ function calculateVarsAtStep(step) {
 		vars[solid.name] = calc
 
 		//	-> update the DOM with theose new results
+		updateSolidSvgPathAndShape(solid, calc)
     });
 
 
@@ -117,9 +108,12 @@ function calculateVarsAtStep(step) {
 	for each output perofrm the calculator
 */
 	$.each( outputs, function( index, output ) {
-		vars[output.name] = evaluateCalculator( output.calculator, vars )
+
+		var newValue = evaluateCalculator( output.calculator, vars );
+		vars[output.name] = newValue;
 
 		// -> update the DOM with the new reuslts.
+		updateUserFormOutputDouble(output, newValue);
     });
 
 
@@ -343,33 +337,14 @@ function parseProblemToMemory( problem ) {
   }
 }
 
-function renderProblemFromMemory() { 
-  // Render from memory into page
 
-  $("#digClock").html( time.start );
-  $("#description").html( description.text );
 
-//Debugging 29 Jul 2016
-//console.log("setting xmin val: ", iwindow.xmin );
-  $("#iwindow_xmin").val( iwindow.xmin );
-  $("#iwindow_xmax").val( iwindow.xmax );
-  $("#iwindow_xgrid").val( iwindow.xgrid );
-  $("#iwindow_xunit").val( iwindow.xunit );
-  $("#iwindow_ymax").val( iwindow.ymax );
-  $("#iwindow_ymin").val( iwindow.ymin );
-  $("#iwindow_ygrid").val( iwindow.ygrid );
-  $("#iwindow_yunit").val( iwindow.yunit );
 
-// GraphWindow is a TODO feature for now.
-// $("#graphWindow").html( graphWindow );
 
-  $("#variableTable").append("<tr><th colspan='2'>Inputs</th></tr>"+htmlInputs+"<tr><th colspan='2'>Outputs</th></tr>"+htmlOutputs);
-  //Moved to addSolidsToCanvas, 8 Aug 2016
-  //$("#solids").html( solids.join(" ") );
 
-  renderCanvasFromMemory();
-  addSolidsToCanvas(svgSolids);
-};
+
+//--------------------------------------------------------------------------------
+// SVG ViewBox Scaling
 
 var canvasBox = { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
 function yCanvas(y) {
@@ -406,6 +381,40 @@ function proportion(size) {
   var proportion = cDomain/xDomain; 
   return size*proportion;
 }
+
+
+//--------------------------------------------------------------------------------
+// DOM Manipulation
+
+function renderProblemFromMemory() { 
+  // Render from memory into page
+
+  $("#digClock").html( time.start );
+  $("#description").html( description.text );
+
+//Debugging 29 Jul 2016
+//console.log("setting xmin val: ", iwindow.xmin );
+  $("#iwindow_xmin").val( iwindow.xmin );
+  $("#iwindow_xmax").val( iwindow.xmax );
+  $("#iwindow_xgrid").val( iwindow.xgrid );
+  $("#iwindow_xunit").val( iwindow.xunit );
+  $("#iwindow_ymax").val( iwindow.ymax );
+  $("#iwindow_ymin").val( iwindow.ymin );
+  $("#iwindow_ygrid").val( iwindow.ygrid );
+  $("#iwindow_yunit").val( iwindow.yunit );
+
+// GraphWindow is a TODO feature for now.
+// $("#graphWindow").html( graphWindow );
+
+  $("#variableTable").append("<tr><th colspan='2'>Inputs</th></tr>"+htmlInputs+"<tr><th colspan='2'>Outputs</th></tr>"+htmlOutputs);
+  //Moved to addSolidsToCanvas, 8 Aug 2016
+  //$("#solids").html( solids.join(" ") );
+
+  renderCanvasFromMemory();
+  addSolidsToCanvas(svgSolids);
+};
+
+
 
 function addSolidsToCanvas(solids) {
   //console.log("solids: ", solids);
@@ -466,6 +475,36 @@ function renderCanvasFromMemory() {
   // http://stackoverflow.com/questions/3642035/jquerys-append-not-working-with-svg-element
   $("#canvasDiv").html($("#canvasDiv").html());
 };
+
+
+
+function queryUserFormInputDouble(input) {
+
+	var readValue = $("#" + input.name).val();
+	var doubleValue = parseFloat(readValue);
+	//console.log("queryUserDefinedInput: for input: ", input, " readValue: ", readValue,  "  doubleValue: ", doubleValue );
+
+	// TODO if readValue doesn't make sense, then default back to input.initialValue;
+	
+	return doubleValue;
+}
+
+function updateUserFormOutputDouble(output, newValue) { 
+	var readValue = $("#" + output.name).val(newValue);
+}
+
+
+function updateSolidSvgPathAndShape(solid, pathAndShape) { 
+	
+	var svgSolid = $("#" + solid.name);
+
+	console.log("updateSolidSvgPathAndShape: ", svgSolid, pathAndShape);
+
+	// TODO , SVG Maniplation
+
+	// translate from math to visual.
+}
+
 
 //Hide and reveal windowSettings table.
 function windowSettingsOn() {
