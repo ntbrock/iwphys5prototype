@@ -24,19 +24,19 @@
       <tr>  
         <td class="bottomBorder">
           <span>Time: </span>
-          <span id="digClock">0.00</span>
+          <span id="itime">--</span>
         </td>
         <td id="addMe">
-          <input id="reset" type="button" onclick="reset()" value="Reset"></input>
+          <input id="resetButton" type="button" onclick="handleResetClick()" value="Reset"></input>
         </td>
         <td id="buttonControls">
-          <span><input id="backTick" type="button" onclick="backTick()" value="<<"></input></span>
-          <span><input id="startStop" type="button" onclick="start()" value="Start"></input></span>
-          <span><input id="forwardTick" type="button" onclick="forwardTick()" value=">>"></input></span>
+          <span><input id="backButton" type="button" onclick="handleBackClick()" value="<<"></input></span>
+          <span><input id="startStopButton" type="button" onclick="handleStartClick()" value="Start"></input></span>
+          <span><input id="forwardButton" type="button" onclick="handleForwardClick()" value=">>"></input></span>
         </td>
         <td class="bottomBorder">
           <span>Time Step: </span>
-          <span><input id="input4" type="text" value="0.05" size="4em"/></span>
+          <span><input id="itime_change" type="text" value="0.05" size="4em"/></span>
         </td>
       </tr>
     </table>

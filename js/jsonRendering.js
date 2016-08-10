@@ -28,6 +28,13 @@ var svgSolids = [];
 
 var varsAtStep = [];
 var currentStep = 0;
+var changeStep = 0; 	// -1 = backwards, 0 = stopped, 1 = forwards.
+
+function masterResetSteps() { 
+	currentStep = 0;
+	changeStep = 0;
+	varsAtStep = [];
+}
 
 
 
@@ -52,6 +59,60 @@ math.toDegrees = function(radians) { return radians * 180 / Math.PI; };
 varsConstants = { G : -9.8 }
 
 
+function setStepDirection(newDirection) {
+	changeStep = newDirection;
+}
+
+function stepForwardAndPause() { 
+	setStepDirection(1);
+	handleStep();
+	setStepDirection(0);
+}
+
+function stepBackwardAndPause() { 
+	setStepDirection(-1);
+	handleStep();
+	setStepDirection(0);
+}
+
+
+// forward and back stops animation
+
+
+/**
+ * MAjor function - called every time the animation time changes 
+ */
+function handleStep() { 
+
+	console.log("handleStep:87> current: " , currentStep, "  change: ", changeStep );
+	// apply the time change.
+	var newStep = currentStep + changeStep;
+
+	// handle time horizons
+	if ( newStep < 0 ) { 
+		changeStep = 0;
+		newStep = 0;
+	} 
+	// TODO - end of time.
+
+	console.log("handleStep:61> newStep: " + newStep)
+
+	if ( newStep != currentStep ) { 
+
+		// UI rendering is handled by the calculate as a side effect
+		var vars = calculateVarsAtStep(newStep);
+
+		archiveVarsAtStep( newStep, vars );
+	}
+
+	currentStep = newStep;
+
+}
+
+
+function archiveVarsAtStep( step, vars ) {
+	varsAtStep[step] = vars
+}
 
 
 function calculateVarsAtStep(step) { 
@@ -63,6 +124,9 @@ function calculateVarsAtStep(step) {
 	// Eveything begins with time, populate t.
 	vars.t = time.start + step * time.change;
 	vars.tDelta = time.change;
+
+	updateTimeDisplay(vars.t);
+
 
 	/*
 	for each input
@@ -397,7 +461,7 @@ function yHeight(size) {
 function renderProblemFromMemory() { 
   // Render from memory into page
 
-  $("#digClock").html( time.start );
+  $("#itime").html( time.start.toFixed(2) );
   $("#description").html( description.text );
 
 //Debugging 29 Jul 2016
@@ -501,6 +565,10 @@ function updateUserFormOutputDouble(output, newValue) {
 	var readValue = $("#" + output.name).val(newValue);
 }
 
+function updateTimeDisplay(t) { 
+	$("#itime").val(t.toFixed(2));
+
+}
 
 function updateSolidSvgPathAndShape(solid, pathAndShape) { 
 	
@@ -508,28 +576,9 @@ function updateSolidSvgPathAndShape(solid, pathAndShape) {
 
 	console.log("updateSolidSvgPathAndShape: ", solid, svgSolid, pathAndShape);
 
-	// TODO , SVG Maniplation
-
 	// translate from math to visual.
+	/* pathAndShape: { height: 1, width: 1, x: 9, xdisp: 9, y: 0, ydisp: 0 }*/
 
-/*height
-:
-1
-width
-:
-1
-x
-:
-9
-xdisp
-:
-9
-y
-:
-0
-ydisp
-:
-0'*/
 if (solid.shape.type == "circle") {
     svgSolid.attr("cx", xCanvas(pathAndShape.x))
 		.attr("cy", yCanvas(pathAndShape.y))
@@ -568,3 +617,61 @@ function windowSettingsOff() {
 	$("#iwindow").attr("style", "visibility:hidden");
 	$("#windowSettings").attr("onclick", "windowSettingsOn()");
 }
+
+
+function handleStartClick() {
+	handleGoClick();
+	showReset();
+}
+
+var buttonIds  = { startStop: "startStopButton", back: "backButton", forward: "forwardButton", reset: "resetButton" }
+var stepTrigger;
+
+//Restarts motion.
+function handleGoClick() {
+	stepTrigger = setInterval("handleStep()", 100);
+
+	setStepDirection(1);
+
+	document.getElementById(buttonIds.startStop).setAttribute("onclick", "handleStopClick()");
+	document.getElementById(buttonIds.startStop).setAttribute("value", "Stop");
+}
+//Stops motion.					
+function handleStopClick() {
+//Stop move and time functions.
+	clearInterval(stepTrigger);
+	setStepDirection(0);
+	document.getElementById(buttonIds.startStop).setAttribute("onclick", "handleGoClick()");
+	document.getElementById(buttonIds.startStop).setAttribute("value", "Resume");
+};
+//Resets simulation.
+function handleResetClick() {
+	handleStopClick();
+	masterResetSteps();
+	document.getElementById(buttonIds.startStop).setAttribute("value", "Start");
+	document.getElementById(buttonIds.startStop).setAttribute("onclick", "handleStartClick()");
+}
+
+function handleBackClick() {
+	clearInterval(stepTrigger);
+	stepBackwardAndPause();
+	document.getElementById(buttonIds.startStop).setAttribute("onclick", "handleGoClick()");
+	document.getElementById(buttonIds.startStop).setAttribute("value", "Resume");
+};
+function handleForwardClick() {
+	clearInterval(stepTrigger);
+	stepForwardAndPause();
+	document.getElementById(buttonIds.startStop).setAttribute("onclick", "handleGoClick()");
+	document.getElementById(buttonIds.startStop).setAttribute("value", "Resume");
+};
+
+
+function showReset() {
+	document.getElementById(buttonIds.reset).style.visibility = "visible";
+	document.getElementById(buttonIds.startStop).setAttribute("colspan", "1");
+}
+function hideReset() {
+	document.getElementById(buttonIds.reset).style.visibility = "collapse";
+	document.getElementById(buttonIds.startStop).setAttribute("colspan","2");
+}
+
