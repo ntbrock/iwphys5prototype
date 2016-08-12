@@ -183,51 +183,7 @@ function move() {
 var trigger = null;			
 var clock = null;
 //Begins motion.
-function start() {
-	showReset();
-	go();
-}
-//Restarts motion.
-function go() {
-	trigger = setInterval("move()", 1);
-	clock = setInterval("time()", 10);
-	digClock = setInterval("clockDisplay()", 100);
-	document.getElementById("startStop").setAttribute("onclick", "stop()");
-	document.getElementById("startStop").setAttribute("value", "Stop");
-}
-//Stops motion.					
-function stop() {
-//Stop move and time functions.
-	clearInterval(trigger);
-	clearInterval(clock);
-	clearInterval(digClock);
-	document.getElementById("startStop").setAttribute("onclick", "go()");
-	document.getElementById("startStop").setAttribute("value", "Resume");
-};
-//Resets simulation.
-function reset() {
-	stop();
-	d3.selectAll("circle")
-		.attr("visibility", "hidden")
-		.attr("cx", function(d) { return xView(varsNow.xi); })	  				
-		.attr("cy", function(d) { return yView(varsNow.yi); }); 
-	t = 0;
-	document.getElementById("startStop").setAttribute("value", "Start");
-	document.getElementById("startStop").setAttribute("onclick", "start()");
-	hideReset();
-	groundAndPlatform();
-	createMemory();
-}
-function showReset() {
-	document.getElementById("reset").style.visibility = "visible";
-	document.getElementById("startStop").setAttribute("colspan", "1");
-	document.getElementById("addMe").style.visibility = "visible";
-}
-function hideReset() {
-	document.getElementById("reset").style.visibility = "collapse";
-	document.getElementById("startStop").setAttribute("colspan","2");
-	document.getElementById("addMe").style.visibility = "collapse";
-}
+ f
 
 //Debugging Code
 /*function check() {
@@ -306,7 +262,7 @@ function applyTrail() {
 	// 2016-Jul-20
 	//console.log("current iteration: "+currentIteration);
 	currentIteration = Math.ceil(t/tDelta);
-	lineData = varsAtStep.slice(0, currentIteration);
+	lineData = varsAtStep.slice(0, currentIteration); 
 	/* Debugging 28 Jul 2016
 	console.log("lineData: "+lineData);
 	console.log("t: "+t); */
