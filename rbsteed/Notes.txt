@@ -1,61 +1,6 @@
-Accomplished:
-* Fixed reset bug
-* Added time step playbar - sliding?
-* Cleaned up repository
+Close to done!
 
-Meeting Points - Goals to Discuss:
-
-* Trouble with object trails - tie into Euler prototypes?
-* Next objective - equation translation and next prototype
-* Design clarifications
-
-
-
-
-Implementing in-memory historical table - object trails, graphing, unit test comparing versions
-
-
-Next Feature List:
-
-//* Ryan> Migrate inputs to jquery .change callbacks. //
-//* Ryan> Each calulation should write out to the historical table varsAtStep array. //
-//* Ryan> Fix keyboard controls to only apply when inputs are non-focused. //
-//* Ryan> Clear console logs. //
-//* Ryan> Ball needs disappear before first rendering. //
-//* Ryan> Add cannon and moving platform //
-//* Ryan> Clean up code - add comments and clarity.//
-//* Ryan> Table css / format fix //
-//* Ryan> Fix inputs.//
-//* Ryan> Object trail must go both ways, and reset.//
-
-* Ryan> Clean up css file.
-
-* Ryan> Format keyboard controls for Safari, Firefox.
-
-* Taylor> What’s up with the glitching?
-
-
-
-
-* Taylor> Iterate over all of the problems, and produce big tables that are every calcualtion at every timestep for every variable.
-
-* Pair next time> Test the javascript varsAtStep against the iwp4 big tables that Taylor created.
-
-* Pair next> Dynamically add solids onto the svg canvas based on the iwp Json.
-
-* Pair next> Doing the inputs, then outputs, then the window size, then the time step controls. (All these things are configurable from the .iwp file).
-
-
-
-
-End prototype.
-Published.
-
-* Ryan > translate y coordinates.
-
-* Ryan > All that other stuff - bring in variables, calculations from prototype. Iterate over solids, outputs, run calculations for each.
-
-* Ryan > Extra formatting.
-
-
-
+Format positioning, accessibility of playBar.
+Fix time display.
+Fix rectangle rendering.
+Add input controls.
